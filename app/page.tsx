@@ -50,16 +50,16 @@ export default function LandingPage() {
             <span>Next-Generation Document Analysis Engine</span>
           </div>
           
-          <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-linear-to-b from-white to-slate-400 leading-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 fill-mode-forwards opacity-0">
+          <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-linear-to-b from-white to-slate-400 leading-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
             Chat with Your <br className="hidden sm:block"/>
             <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-violet-400">Research Documents.</span>
           </h1>
           
-          <p className="text-lg lg:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200 fill-mode-forwards opacity-0">
+          <p className="text-lg lg:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
             Research RAG combines ultra-fast HyDE indexing with cutting-edge multi-model synthesis to extract insights, generate citations, and answer complex questions instantly.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-forwards opacity-0">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300">
             <Link 
               href="/workspace" 
               className="group flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-all shadow-[0_0_30px_rgba(37,99,235,0.3)] hover:shadow-[0_0_50px_rgba(37,99,235,0.5)]"
@@ -77,7 +77,7 @@ export default function LandingPage() {
         </div>
 
         {/* Screenshot Window */}
-        <div className="relative max-w-6xl mx-auto mb-32 group animate-in fade-in zoom-in-95 duration-1000 delay-500 fill-mode-forwards opacity-0 perspective-1000">
+        <div className="relative max-w-6xl mx-auto mb-32 group animate-in fade-in zoom-in-95 duration-1000 delay-500 perspective-1000">
           <div className="absolute inset-x-0 -bottom-20 h-full bg-linear-to-t from-slate-950 via-transparent to-transparent z-20 pointer-events-none"></div>
           
           {/* Outer Glow */}
@@ -107,7 +107,7 @@ export default function LandingPage() {
                 <Brain className="w-16 h-16 opacity-20" />
                 <p className="text-sm font-medium tracking-widest uppercase">Application Interface</p>
               </div>
-              {/* <img src="/screenshot.png" alt="Research RAG Interface" className="w-full h-full object-cover object-top opacity-0 transition-opacity duration-500 hover:opacity-100" /> */}
+              <img src="/screenshot.png" alt="Research RAG Interface" className="w-full h-full object-cover object-top transition-opacity duration-500" />
             </div>
 
           </div>
