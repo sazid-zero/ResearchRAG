@@ -89,20 +89,6 @@ export async function streamTextWaterfall(options: {
   throw lastError || new Error("All models in stream waterfall failed.");
 }
 
-/**
- * Unified AI provider selection.
- * Prefers OpenRouter (DeepSeek) for reasoning, Cohere for stable Embeddings.
- */
-
-const openrouter = createOpenAI({
-  baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: process.env.OPENROUTER_API_KEY,
-  headers: {
-    'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-    'X-Title': 'Research Paper RAG',
-  }
-});
-
 // Primary fallback list for OpenRouter free models
 export const OPENROUTER_FALLBACKS = [
   { id: 'deepseek/deepseek-chat', name: 'DeepSeek V3' },
@@ -121,6 +107,15 @@ export function getReasoningModels() {
   const models: Array<{ model: LanguageModel, name: string }> = [];
   
   if (process.env.OPENROUTER_API_KEY) {
+    const openrouter = createOpenAI({
+      baseURL: 'https://openrouter.ai/api/v1',
+      apiKey: process.env.OPENROUTER_API_KEY,
+      headers: {
+        'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+        'X-Title': 'Research Paper RAG',
+      }
+    });
+    
     models.push(...OPENROUTER_FALLBACKS.map(m => ({
       model: openrouter(m.id),
       name: m.name
@@ -134,6 +129,7 @@ export function getReasoningModels() {
     });
   }
   
+  // Note: fallback requires OPENAI_API_KEY
   const fallbackModel = openai('gpt-4o-mini');
   return models.length > 0 ? models : [{ model: fallbackModel, name: 'GPT-4o Mini' }];
 }
