@@ -77,6 +77,12 @@
       "regex": "^/api/workspaces(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/workspaces(?:/)?$"
+    },
+    {
+      "page": "/workspace",
+      "regex": "^/workspace(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/workspace(?:/)?$"
     }
   ],
   "dataRoutes": [],

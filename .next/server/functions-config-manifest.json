@@ -1,13 +1,13 @@
 {
   "version": 1,
   "functions": {
-    "/api/upload": {
-      "maxDuration": 60
-    },
     "/api/query": {
       "maxDuration": 60
     },
     "/api/chat/sessions/[id]/messages": {
+      "maxDuration": 60
+    },
+    "/api/upload": {
       "maxDuration": 60
     }
   }

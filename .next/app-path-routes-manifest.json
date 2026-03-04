@@ -7,5 +7,6 @@
   "/api/query/route": "/api/query",
   "/api/upload/route": "/api/upload",
   "/api/workspaces/route": "/api/workspaces",
-  "/page": "/"
+  "/page": "/",
+  "/workspace/page": "/workspace"
 }
