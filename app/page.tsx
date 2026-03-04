@@ -4,6 +4,40 @@ import Link from "next/link"
 import { ArrowRight, Brain, MessageSquare, Sparkles, FileText, Zap, ChevronRight, Github, BookOpen, Search, Database, Cpu, Layers, ShieldCheck, Terminal, Code } from "lucide-react"
 import Lenis from "lenis";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+
+const RevealCard = ({ 
+  children, 
+  delay = 0, 
+  className = "",
+  direction = "up"
+}: { 
+  children: React.ReactNode, 
+  delay?: number, 
+  className?: string,
+  direction?: "up" | "left" | "right" | "scale" | "fade"
+}) => {
+  const directions = {
+    up: { y: 40, x: 0, scale: 1, opacity: 0 },
+    left: { x: 40, y: 0, scale: 1, opacity: 0 },
+    right: { x: -40, y: 0, scale: 1, opacity: 0 },
+    scale: { scale: 0.9, y: 0, x: 0, opacity: 0 },
+    fade: { opacity: 0, y: 0, x: 0, scale: 1 }
+  };
+
+  return (
+    <motion.div
+      initial={directions[direction]}
+      whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1], delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 
 export default function LandingPage() {
    useEffect(() => {
@@ -160,15 +194,21 @@ export default function LandingPage() {
 
         {/* Features Bento Grid */}
         <div id="features" className="max-w-6xl mx-auto mb-32 relative z-10">
-          <div className="text-center mb-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Research at the speed of thought.</h2>
             <p className="text-slate-400 max-w-2xl mx-auto text-lg">Everything you need to synthesize, analyze, and cite from thousands of academic papers in a secure, local-first environment.</p>
-          </div>
+          </motion.div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6">
             
             {/* Bento Box 1: Large Span */}
-            <div className="md:col-span-2 p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group">
+            <RevealCard direction="right" delay={0} className="md:col-span-2 p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group">
               <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center mb-6 border border-blue-500/20">
                 <Brain className="w-6 h-6 text-blue-400" />
@@ -177,10 +217,10 @@ export default function LandingPage() {
               <p className="text-slate-400 leading-relaxed">
                 Dynamically routes your complex queries across a fleet of state-of-the-art LLMs. Our intelligent fallback system automatically switches models if API limits are reached, guaranteeing zero interruptions during deep research sessions.
               </p>
-            </div>
+            </RevealCard>
 
             {/* Bento Box 2 */}
-            <div className="p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group flex flex-col justify-between">
+            <RevealCard direction="left" delay={0.1} className="p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group flex flex-col justify-between">
               <div className="absolute inset-0 bg-linear-to-br from-violet-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-violet-500/20 flex items-center justify-center mb-4 border border-violet-500/20">
@@ -191,10 +231,10 @@ export default function LandingPage() {
               <p className="text-slate-400 leading-relaxed text-sm">
                 Advanced retrieval pipeline combines hypothetical document embeddings with lexical BM25 ranking for extreme accuracy.
               </p>
-            </div>
+            </RevealCard>
 
             {/* Bento Box 3 */}
-            <div className="p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group flex flex-col justify-between">
+            <RevealCard direction="right" delay={0.2} className="p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group flex flex-col justify-between">
               <div className="absolute inset-0 bg-linear-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center mb-4 border border-emerald-500/20">
@@ -205,10 +245,10 @@ export default function LandingPage() {
               <p className="text-slate-400 leading-relaxed text-sm">
                 Every factual claim includes inline context citations linking directly to source PDF text fragments.
               </p>
-            </div>
+            </RevealCard>
 
             {/* Bento Box 4: Large Span */}
-            <div className="md:col-span-2 p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group">
+            <RevealCard direction="left" delay={0.3} className="md:col-span-2 p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group">
               <div className="absolute right-0 top-0 w-64 h-full bg-linear-to-l from-slate-900/80 to-transparent z-10"></div>
               <div className="absolute inset-0 bg-linear-to-tr from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="flex flex-col md:flex-row gap-8 relative z-20">
@@ -234,7 +274,7 @@ export default function LandingPage() {
                    </div>
                 </div>
               </div>
-            </div>
+            </RevealCard>
 
           </div>
         </div>
@@ -320,16 +360,16 @@ export default function LandingPage() {
           </div>
 
           <div className="max-w-7xl mx-auto relative z-10 px-6">
-            <div className="text-center mb-16 relative">
+            <RevealCard direction="fade" delay={0} className="text-center mb-16 relative">
               <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Open Source Foundation.</h2>
               <p className="text-slate-200 max-w-2xl mx-auto leading-relaxed opacity-80">
                 Research RAG is built for the community, by researchers. Explore our full-stack architecture and contribute to the evolution of semantic literature synthesis.
               </p>
-            </div>
+            </RevealCard>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
             {/* Main Repo Card - Code Explorer Mockup */}
-            <div className="md:col-span-2 md:row-span-2 rounded-[2.5rem] bg-slate-900/60 border border-white/10 relative overflow-hidden group flex flex-col shadow-2xl backdrop-blur-sm">
+            <RevealCard direction="scale" delay={0.1} className="md:col-span-2 md:row-span-2 rounded-[2.5rem] bg-slate-900/60 border border-white/10 relative overflow-hidden group flex flex-col shadow-2xl backdrop-blur-sm">
                {/* Previous card content remains... */}
               <div className="absolute top-0 right-0 p-6 opacity-[0.20] group-hover:opacity-[0.30] transition-opacity pointer-events-none">
                 <Github className="w-96 h-96 -rotate-12 translate-x-8 translate-y-16 text-white" />
@@ -365,15 +405,14 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                {/* Mock Code Editor */}
                 <div className="flex-1 p-6 font-mono text-xs leading-relaxed overflow-hidden relative">
-                   <div className="space-y-1 opacity-50 text-[10px] sm:text-xs">
+                   <div className="space-y-1.5 font-semibold text-[10px] sm:text-xs drop-shadow-md">
                     <div className="text-violet-400">export async function <span className="text-blue-400">POST</span>(req: <span className="text-amber-400">Request</span>) {'{'}</div>
-                    <div className="pl-4 text-slate-500">const {'{'} query, workspaceID {'}'} = await req.<span className="text-indigo-400">json()</span>;</div>
-                    <div className="pl-4 text-slate-500">const <span className="text-emerald-400">context</span> = await <span className="text-blue-400">retrieveRelevantChunks</span>(query);</div>
+                    <div className="pl-4 text-slate-300">const {'{'} query, workspaceID {'}'} = await req.<span className="text-indigo-400">json()</span>;</div>
+                    <div className="pl-4 text-slate-300">const <span className="text-emerald-400">context</span> = await <span className="text-blue-400">retrieveRelevantChunks</span>(query);</div>
                     <div className="pl-4 text-violet-400">return <span className="text-amber-400">streamText</span>({'{'}</div>
-                    <div className="pl-8 text-slate-500">model: <span className="text-indigo-400">waterfall</span>(["gemini", "openai"]),</div>
-                    <div className="pl-8 text-slate-500">system: <span className="text-emerald-400">"Research Assistant v4.2"</span>,</div>
+                    <div className="pl-8 text-slate-300">model: <span className="text-indigo-400">waterfall</span>(["gemini", "openai"]),</div>
+                    <div className="pl-8 text-slate-300">system: <span className="text-emerald-400">"Research Assistant v4.2"</span>,</div>
                     <div className="pl-4 text-violet-400">{'}'}); </div>
                     <div className="text-violet-400">{'}'}</div>
                    </div>
@@ -395,10 +434,10 @@ export default function LandingPage() {
                    </div>
                 </div>
               </div>
-            </div>
+            </RevealCard>
 
             {/* WHITE LIGHT CARD - Discussion Mockup (ConsultBook Inspired) */}
-            <div className="md:row-span-2 rounded-4xl p-8 bg-white border border-slate-200 transition-all group relative overflow-hidden flex flex-col shadow-2xl hover:-translate-y-2 duration-500">
+            <RevealCard direction="left" delay={0.2} className="md:row-span-2 rounded-4xl p-8 bg-white border border-slate-200 transition-all group relative overflow-hidden flex flex-col shadow-2xl hover:-translate-y-2 duration-500">
                <div className="absolute -top-4 -right-4 w-24 h-24 bg-indigo-50 rounded-full blur-2xl group-hover:bg-indigo-100 transition-colors"></div>
                <div className="absolute top-4 right-4 animate-float">
                   <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-200">
@@ -456,52 +495,53 @@ export default function LandingPage() {
                     <ArrowRight className="w-5 h-5 text-white transition-transform group-hover/btn:translate-x-0.5" />
                   </Link>
                </div>
-            </div>
+            </RevealCard>
 
-              {/* LIGHT Card - Contribution Terminal (Join the Fleet) */}
-            <div className="rounded-4xl bg-gray-50/80 border border-blue-400/20 shadow-[inset_0_0_40px_rgba(59,130,246,0.05)] transition-all group flex flex-col relative overflow-hidden hover:-translate-y-1 duration-500">
+              {/* DARK GLASS Card - Contribution Terminal (Join the Fleet) */}
+            <RevealCard direction="right" delay={0.3} className="rounded-4xl bg-slate-900/60 border border-cyan-500/20 backdrop-blur-md shadow-[inset_0_0_40px_rgba(34,211,238,0.05)] transition-all group flex flex-col relative overflow-hidden hover:-translate-y-2 duration-500 hover:shadow-[0_0_50px_rgba(34,211,238,0.15)]">
+               <div className="absolute inset-0 bg-linear-to-b from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                {/* Mock Terminal Header */}
-               <div className="h-8 border-b border-blue-200/30 bg-blue-950 flex items-center px-4 gap-2">
+               <div className="h-8 border-b border-cyan-500/20 bg-slate-950 flex items-center px-4 gap-2 z-10 relative">
                  <div className="flex gap-1.5">
-                   <div className="w-2 h-2 rounded-full bg-red-400/40"></div>
-                   <div className="w-2 h-2 rounded-full bg-amber-400/40"></div>
-                   <div className="w-2 h-2 rounded-full bg-emerald-400/40"></div>
+                   <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
+                   <div className="w-2 h-2 rounded-full bg-amber-500/50"></div>
+                   <div className="w-2 h-2 rounded-full bg-emerald-500/50"></div>
                  </div>
-                 <div className="text-[8px] text-blue-200 font-mono flex items-center gap-1.5">
+                 <div className="text-[8px] text-cyan-400/80 font-mono flex items-center gap-1.5">
                    <Terminal className="w-2.5 h-2.5" />
                    <span>bash — research-lab</span>
                  </div>
                </div>
 
-               <div className="p-8 flex flex-col justify-between flex-1 relative">
-                 <div className="absolute top-0 right-0 p-4 opacity-[0.12] group-hover:opacity-[0.20] transition-opacity pointer-events-none">
-                    <Zap className="w-32 h-32 text-blue-600" />
+               <div className="p-8 flex flex-col justify-between flex-1 relative z-10">
+                 <div className="absolute top-0 right-0 p-4 opacity-[0.05] group-hover:opacity-[0.10] transition-opacity pointer-events-none">
+                    <Terminal className="w-32 h-32 text-cyan-400" />
                  </div>
                  <div className="space-y-6 relative z-10">
                    <div>
-                      <h3 className="text-xl font-bold text-slate-800 mb-2">Join the Fleet.</h3>
-                      <p className="text-xs text-slate-500 leading-relaxed">Submit PRs and test retrieval patterns.</p>
+                      <h3 className="text-2xl font-bold text-white mb-2">Join the Fleet.</h3>
+                      <p className="text-sm text-slate-400 leading-relaxed">Submit PRs and test retrieval patterns.</p>
                    </div>
                    
-                   <div className="p-4 rounded-xl bg-slate-800 border border-slate-700 font-mono text-[9px] text-emerald-400/90 space-y-2 shadow-inner">
+                   <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 font-mono text-[10px] sm:text-xs text-emerald-400 space-y-2 shadow-inner group-hover:border-cyan-500/30 transition-colors">
                       <div className="flex gap-2">
-                        <span className="text-slate-500">$</span> 
-                        <span>git clone research-rag</span>
+                        <span className="text-slate-600">$</span> 
+                        <span className="text-slate-300">git clone research-rag</span>
                       </div>
                       <div className="flex gap-2">
-                        <span className="text-slate-500">$</span> 
-                        <span className="text-blue-400">pnpm</span> install
+                        <span className="text-slate-600">$</span> 
+                        <span className="text-cyan-400">pnpm</span> <span className="text-slate-300">install</span>
                       </div>
                    </div>
                  </div>
-                 <Link href="https://github.com/sazid-zero/ResearchRAG" target="_blank" className="mt-8 text-blue-600 text-[10px] font-bold hover:text-blue-800 transition-colors flex items-center gap-2 group/link">
-                   View Repo <ChevronRight className="w-4 h-4" />
+                 <Link href="https://github.com/sazid-zero/ResearchRAG" target="_blank" className="mt-8 text-cyan-400 text-xs font-bold hover:text-cyan-300 transition-colors flex items-center gap-2 group/link">
+                   View Repo <ChevronRight className="w-4 h-4 transition-transform group-hover/link:translate-x-1" />
                  </Link>
                </div>
-            </div>
+            </RevealCard>
 
             {/* Bottom Wide Card - Auditable Intelligence (Gray/Black/White) */}
-            <div className="md:col-span-2 rounded-4xl p-8 bg-linear-to-br from-gray-800 via-slate-900 to-gray-950 border border-gray-600/30 flex flex-col justify-between relative overflow-hidden group shadow-2xl hover:-translate-y-1 duration-500">
+            <RevealCard direction="up" delay={0.4} className="md:col-span-2 rounded-4xl p-8 bg-linear-to-br from-gray-800 via-slate-900 to-gray-950 border border-gray-600/30 flex flex-col justify-between relative overflow-hidden group shadow-2xl hover:-translate-y-2 duration-500">
                {/* Background Watermark */}
                <div className="absolute -bottom-8 -right-8 opacity-[0.10] group-hover:opacity-[0.16] transition-opacity pointer-events-none">
                  <ShieldCheck className="w-64 h-64 text-white" />
@@ -586,13 +626,14 @@ export default function LandingPage() {
                         ))}
                      </div>
                    </div>
-                 </div>
+                  </div>
                </div>
-            </div>
+            </RevealCard>
           </div>
         </div>
       </div>
         {/* Tech Stack - Infinite Linear Marquee (Hugging Face Style) */}
+        <RevealCard direction="fade" delay={0.1}>
         <div className="w-screen relative left-1/2 -translate-x-1/2 mb-32 z-10 py-24 overflow-hidden bg-slate-950/40 border-y border-white/5">
           <div className="max-w-8xl mx-auto text-center mb-16 px-6">
             <span className="text-[10px] uppercase tracking-[0.5em] text-blue-500 font-bold block mb-4">The Neural Infrastructure</span>
@@ -693,9 +734,10 @@ export default function LandingPage() {
           <div className="absolute inset-y-0 left-0 w-80 bg-linear-to-r from-slate-950 via-slate-950/80 to-transparent z-20 pointer-events-none"></div>
           <div className="absolute inset-y-0 right-0 w-80 bg-linear-to-l from-slate-950 via-slate-950/80 to-transparent z-20 pointer-events-none"></div>
         </div>
+        </RevealCard>
 
         {/* CTA Section */}
-        <div className="max-w-4xl mx-auto rounded-[2.5rem] p-10 md:p-16 text-center relative overflow-hidden border border-blue-500/20 bg-blue-950/20 backdrop-blur-md mb-20 group">
+        <RevealCard direction="scale" delay={0.2} className="max-w-4xl mx-auto rounded-[2.5rem] p-10 md:p-16 text-center relative overflow-hidden border border-blue-500/20 bg-blue-950/20 backdrop-blur-md mb-20 group">
           <div className="absolute inset-0 bg-linear-to-b from-blue-500/10 to-transparent opacity-50"></div>
           <div className="absolute -top-32 -right-32 w-80 h-80 bg-blue-600/20 rounded-full blur-[100px] group-hover:bg-blue-600/30 transition-colors duration-1000"></div>
           <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-violet-600/20 rounded-full blur-[100px] group-hover:bg-violet-600/30 transition-colors duration-1000"></div>
@@ -713,7 +755,7 @@ export default function LandingPage() {
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
-        </div>
+        </RevealCard>
 
       </main>
 
