@@ -1,11 +1,7 @@
-import { generateTextWaterfall, streamTextWaterfall, getEmbeddingModel } from '@/lib/ai';
-import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-import { embed } from 'ai';
 import { headers } from 'next/headers';
 
 export const maxDuration = 60;
-
 export const dynamic = 'force-dynamic';
 
 export async function GET(
@@ -14,6 +10,7 @@ export async function GET(
 ) {
   await headers();
   try {
+    const { prisma } = await import('@/lib/prisma');
     const { id } = await params;
     const messages = await prisma.message.findMany({
       where: { chatSessionId: id },
@@ -34,6 +31,10 @@ export async function POST(
   const startTime = Date.now();
 
   try {
+    const { prisma } = await import('@/lib/prisma');
+    const { generateTextWaterfall, streamTextWaterfall, getEmbeddingModel } = await import('@/lib/ai');
+    const { embed } = await import('ai');
+
     const { id: sessionId } = await params;
     const { content, paper_ids, workspace_id } = await req.json();
 

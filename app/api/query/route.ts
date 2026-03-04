@@ -1,14 +1,16 @@
-import { generateTextWaterfall, streamTextWaterfall, getEmbeddingModel } from '@/lib/ai';
-import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-import { embed } from 'ai';
 
 export const maxDuration = 60;
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
+    const { generateTextWaterfall, streamTextWaterfall, getEmbeddingModel } = await import('@/lib/ai');
+    const { prisma } = await import('@/lib/prisma');
+    const { embed } = await import('ai');
+
     const { question, paper_ids, workspace_id } = await req.json();
 
     if (!question) {

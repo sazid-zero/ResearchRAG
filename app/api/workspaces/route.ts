@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
@@ -7,6 +6,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   await headers();
   try {
+    const { prisma } = await import('@/lib/prisma');
     const workspaces = await prisma.workspace.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
@@ -25,6 +25,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const { prisma } = await import('@/lib/prisma');
     const { name } = await req.json();
 
     if (!name) {
@@ -44,6 +45,7 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const { prisma } = await import('@/lib/prisma');
     const url = new URL(req.url);
     const id = url.searchParams.get('id');
 

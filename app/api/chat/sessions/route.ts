@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
@@ -7,6 +6,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: Request) {
   await headers();
   try {
+    const { prisma } = await import('@/lib/prisma');
     const url = new URL(req.url);
     const workspaceId = url.searchParams.get('workspaceId');
 
@@ -33,6 +33,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const { prisma } = await import('@/lib/prisma');
     const { workspaceId, title } = await req.json();
 
     if (!workspaceId) {
@@ -55,6 +56,7 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const { prisma } = await import('@/lib/prisma');
     const url = new URL(req.url);
     const id = url.searchParams.get('id');
 
