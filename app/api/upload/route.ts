@@ -19,11 +19,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
 
+    const userId = req.headers.get('x-user-id');
     let finalWorkspaceId = workspaceId;
+    
     if (!finalWorkspaceId) {
-      let defaultWorkspace = await prisma.workspace.findFirst({ where: { name: 'Default' } });
+      let defaultWorkspace = await prisma.workspace.findFirst({ 
+        where: { name: 'Default', userId: userId || null } 
+      });
+      
       if (!defaultWorkspace) {
-        defaultWorkspace = await prisma.workspace.create({ data: { name: 'Default' } });
+        defaultWorkspace = await prisma.workspace.create({ 
+          data: { name: 'Default', userId: userId || null } 
+        });
       }
       finalWorkspaceId = defaultWorkspace.id;
     }

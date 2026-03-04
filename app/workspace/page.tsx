@@ -11,6 +11,7 @@ import ChatPanel from "@/components/chat-panel"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { getAuthHeaders } from "@/lib/session"
 import { 
   Dialog, 
   DialogContent, 
@@ -58,7 +59,9 @@ export default function Home() {
 
   const fetchWorkspaces = async () => {
     try {
-      const response = await fetch("/api/workspaces")
+      const response = await fetch("/api/workspaces", {
+        headers: getAuthHeaders()
+      })
       const data = await response.json()
       setWorkspaces(data.workspaces || [])
       
@@ -72,7 +75,9 @@ export default function Home() {
 
   const fetchPapers = async (workspaceId: string) => {
     try {
-      const response = await fetch(`/api/papers?workspaceId=${workspaceId}`)
+      const response = await fetch(`/api/papers?workspaceId=${workspaceId}`, {
+        headers: getAuthHeaders()
+      })
       const data = await response.json()
       setPapers(data.papers || [])
       setError("")
@@ -88,7 +93,7 @@ export default function Home() {
     try {
       const response = await fetch("/api/workspaces", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ name: newWorkspaceName })
       })
       const data = await response.json()
@@ -108,7 +113,10 @@ export default function Home() {
     if (!confirm("Delete this workspace and all its papers?")) return
     
     try {
-      await fetch(`/api/workspaces?id=${id}`, { method: "DELETE" })
+      await fetch(`/api/workspaces?id=${id}`, { 
+        method: "DELETE",
+        headers: getAuthHeaders()
+      })
       setWorkspaces(workspaces.filter((w: any) => w.id !== id))
       if (selectedWorkspaceId === id && workspaces.length > 1) {
         setSelectedWorkspaceId(workspaces[0].id === id ? workspaces[1].id : workspaces[0].id)

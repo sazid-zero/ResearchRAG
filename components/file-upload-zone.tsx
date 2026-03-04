@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { set as setIDB } from "idb-keyval"
 import { v4 as uuidv4 } from "uuid"
 import { toast } from "sonner"
+import { getOrCreateUserId } from "@/lib/session"
 
 export default function FileUploadZone({ workspaceId, onUploadSuccess }) {
   const [uploading, setUploading] = useState(false)
@@ -61,6 +62,9 @@ export default function FileUploadZone({ workspaceId, onUploadSuccess }) {
 
         const response = await fetch("/api/upload", {
           method: "POST",
+          headers: {
+            "X-User-Id": getOrCreateUserId()
+          },
           body: formData,
         })
 
