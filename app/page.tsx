@@ -107,7 +107,7 @@ export default function LandingPage() {
                 <Brain className="w-16 h-16 opacity-20" />
                 <p className="text-sm font-medium tracking-widest uppercase">Application Interface</p>
               </div>
-              {/* <img src="/screenshot.png" alt="ScholarRAG Interface" className="w-full h-full object-cover object-top opacity-0 transition-opacity duration-500 hover:opacity-100" /> */}
+              {/* <img src="/screenshot.png" alt="Research RAG Interface" className="w-full h-full object-cover object-top opacity-0 transition-opacity duration-500 hover:opacity-100" /> */}
             </div>
 
           </div>
