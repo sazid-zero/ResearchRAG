@@ -1,0 +1,66 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [vector]
+}
+
+model Workspace {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  papers    Paper[]
+  chats     ChatSession[]
+}
+
+model Paper {
+  id          String   @id @default(uuid())
+  workspaceId String
+  title       String
+  authors     String?
+  year        Int?
+  summary     String?  // LLM generated summary
+  url         String   // Storage URL or local path
+  createdAt   DateTime @default(now())
+  
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  chunks      DocumentChunk[]
+}
+
+model DocumentChunk {
+  id          String   @id @default(uuid())
+  paperId     String
+  content     String
+  section     String?
+  page        Int?
+  embedding   Unsupported("vector(1024)")
+  
+  paper       Paper    @relation(fields: [paperId], references: [id], onDelete: Cascade)
+}
+
+model ChatSession {
+  id          String   @id @default(uuid())
+  workspaceId String
+  title       String
+  createdAt   DateTime @default(now())
+  
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  messages    Message[]
+}
+
+model Message {
+  id            String   @id @default(uuid())
+  chatSessionId String
+  role          String   // 'user' | 'assistant'
+  content       String
+  citations     Json?    // Store array of citations used in response
+  createdAt     DateTime @default(now())
+  
+  chatSession   ChatSession @relation(fields: [chatSessionId], references: [id], onDelete: Cascade)
+}

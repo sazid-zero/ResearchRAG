@@ -1,0 +1,148 @@
+[
+  {
+    "id": 1,
+    "question": "What is the main goal of the paper 'Attention is All You Need'?",
+    "expected_papers": ["paper_3.pdf"],
+    "difficulty": "easy",
+    "type": "single-paper"
+  },
+  {
+    "id": 2,
+    "question": "Which activation functions are commonly used in neural network architectures?",
+    "expected_papers": ["paper_2.pdf"],
+    "difficulty": "easy",
+    "type": "single-paper"
+  },
+  {
+    "id": 3,
+    "question": "What datasets are used to evaluate computer vision models in the provided papers?",
+    "expected_papers": ["paper_4.pdf"],
+    "difficulty": "medium",
+    "type": "single-paper"
+  },
+  {
+    "id": 4,
+    "question": "Compare the performance of CNNs and Transformers for image recognition tasks.",
+    "expected_papers": ["paper_3.pdf", "paper_4.pdf"],
+    "difficulty": "medium",
+    "type": "multi-paper"
+  },
+  {
+    "id": 5,
+    "question": "Which optimization algorithms are discussed across the machine learning and deep learning papers?",
+    "expected_papers": ["paper_1.pdf", "paper_2.pdf"],
+    "difficulty": "medium",
+    "type": "multi-paper"
+  },
+  {
+    "id": 6,
+    "question": "How is reinforcement learning applied to decision-making problems?",
+    "expected_papers": ["paper_5.pdf"],
+    "difficulty": "easy",
+    "type": "single-paper"
+  },
+  {
+    "id": 7,
+    "question": "Summarize the methodology of the transformer model.",
+    "expected_papers": ["paper_3.pdf"],
+    "difficulty": "easy",
+    "type": "single-paper"
+  },
+  {
+    "id": 8,
+    "question": "What are the major challenges in training deep neural networks?",
+    "expected_papers": ["paper_2.pdf"],
+    "difficulty": "medium",
+    "type": "single-paper"
+  },
+  {
+    "id": 9,
+    "question": "Which paper introduces attention mechanisms, and how do they improve performance?",
+    "expected_papers": ["paper_3.pdf"],
+    "difficulty": "easy",
+    "type": "single-paper"
+  },
+  {
+    "id": 10,
+    "question": "How do classical machine learning methods differ from deep learning approaches?",
+    "expected_papers": ["paper_1.pdf", "paper_2.pdf"],
+    "difficulty": "medium",
+    "type": "multi-paper"
+  },
+  {
+    "id": 11,
+    "question": "List the benchmarks used to evaluate reinforcement learning algorithms.",
+    "expected_papers": ["paper_5.pdf"],
+    "difficulty": "easy",
+    "type": "single-paper"
+  },
+  {
+    "id": 12,
+    "question": "What loss functions are used across different neural architectures?",
+    "expected_papers": ["paper_2.pdf", "paper_4.pdf"],
+    "difficulty": "medium",
+    "type": "multi-paper"
+  },
+  {
+    "id": 13,
+    "question": "Explain how convolutional neural networks extract features from images.",
+    "expected_papers": ["paper_4.pdf"],
+    "difficulty": "easy",
+    "type": "single-paper"
+  },
+  {
+    "id": 14,
+    "question": "Describe the reinforcement learning reward optimization process.",
+    "expected_papers": ["paper_5.pdf"],
+    "difficulty": "easy",
+    "type": "single-paper"
+  },
+  {
+    "id": 15,
+    "question": "How can transfer learning be applied across different deep learning domains?",
+    "expected_papers": ["paper_2.pdf", "paper_4.pdf"],
+    "difficulty": "medium",
+    "type": "multi-paper"
+  },
+  {
+    "id": 16,
+    "question": "Compare the training efficiency of gradient descent methods across all papers.",
+    "expected_papers": ["paper_1.pdf", "paper_2.pdf", "paper_5.pdf"],
+    "difficulty": "hard",
+    "type": "multi-paper"
+  },
+  {
+    "id": 17,
+    "question": "Which architectures demonstrated the highest generalization capability?",
+    "expected_papers": ["paper_2.pdf", "paper_3.pdf", "paper_4.pdf"],
+    "difficulty": "hard",
+    "type": "multi-paper"
+  },
+  {
+    "id": 18,
+    "question": "What are the future research directions suggested by the reinforcement learning paper?",
+    "expected_papers": ["paper_5.pdf"],
+    "difficulty": "medium",
+    "type": "single-paper"
+  },
+  {
+    "id": 19,
+    "question": "Discuss how attention mechanisms can be combined with convolutional layers.",
+    "expected_papers": ["paper_3.pdf", "paper_4.pdf"],
+    "difficulty": "hard",
+    "type": "multi-paper"
+  },
+  {
+    "id": 20,
+    "question": "What are the ethical considerations mentioned across all papers?",
+    "expected_papers": [
+      "paper_1.pdf",
+      "paper_2.pdf",
+      "paper_3.pdf",
+      "paper_4.pdf",
+      "paper_5.pdf"
+    ],
+    "difficulty": "hard",
+    "type": "cross-domain"
+  }
+]

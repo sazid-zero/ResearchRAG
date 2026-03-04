@@ -1,0 +1,40 @@
+# FastAPI and Web Framework
+fastapi
+uvicorn[standard]
+python-multipart
+
+# PDF Processing
+PyPDF2
+pdfplumber
+python-pptx
+
+# Embeddings
+sentence-transformers
+torch
+
+# Vector Database
+qdrant-client
+
+# HTTP Requests
+requests
+
+# Environment Variables
+python-dotenv
+
+# Database
+sqlalchemy
+psycopg2-binary
+
+# Testing
+pytest
+pytest-asyncio
+
+# Data Validation
+pydantic
+
+# Logging and Monitoring
+python-json-logger
+
+# Development
+black
+flake8
