@@ -189,6 +189,10 @@ html {
   animation: marquee 30s linear infinite;
 }
 
+.animate-marquee-reverse {
+  animation: marquee-reverse 30s linear infinite;
+}
+
 .animate-rotate-3d {
   animation: rotate-3d 40s linear infinite;
 }
