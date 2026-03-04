@@ -1,9 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, Brain, MessageSquare, Sparkles, FileText, Zap, ChevronRight, Github, BookOpen, Search, Database, Cpu, Layers, ShieldCheck, Terminal } from "lucide-react"
+import { ArrowRight, Brain, MessageSquare, Sparkles, FileText, Zap, ChevronRight, Github, BookOpen, Search, Database, Cpu, Layers, ShieldCheck, Terminal, Code } from "lucide-react"
 import Lenis from "lenis";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function LandingPage() {
    useEffect(() => {
@@ -19,6 +19,37 @@ export default function LandingPage() {
     return () => {
       lenis.destroy();
     };
+  }, []);
+
+  const [nodes, setNodes] = useState<{ 
+    id: number;
+    top: number; 
+    left: number; 
+    delay: string; 
+    duration: string; 
+    glowSize: string;
+  }[]>([]);
+
+  useEffect(() => {
+    // Fixed coordinates around the schematic rings (percentage from center-perspective)
+    // Placed to weave around the bento cards and schematic rings
+    const fixedPos = [
+      { top: 15, left: 15 }, { top: 15, left: 85 }, // Top-Left & Top-Right Symmetric
+      { top: 50, left: 5 },  { top: 50, left: 95 }, // Center-Left & Center-Right Outermost
+      { top: 85, left: 20 }, { top: 85, left: 80 }, // Mid-Bottom Left & Mid-Bottom Right
+      { top: 95, left: 40 }, { top: 95, left: 60 }, // Bottom-Most Symmetric (close to outer radial)
+      { top: 30, left: 40 }, { top: 70, left: 60 }  // Mid-Perspective
+    ];
+
+    const generated = fixedPos.map((pos, i) => ({
+      id: i,
+      top: pos.top,
+      left: pos.left,
+      delay: `${i * 2.5}s`,
+      duration: `${35 + Math.random() * 20}s`,
+      glowSize: `${160 + Math.random() * 80}px`,
+    }));
+    setNodes(generated);
   }, []);
 
   return (
@@ -209,26 +240,99 @@ export default function LandingPage() {
         </div>
 
         {/* Open Source Section - UI Mockup Bento Layout */}
-        <div className="max-w-7xl mx-auto mb-32 relative z-10 px-6">
+        <div className="w-screen relative left-1/2 -translate-x-1/2 z-10 py-24 overflow-hidden border-y border-white/5">
           
-          {/* Animated Background Objects for this section */}
-          <div className="absolute inset-0 pointer-events-none opacity-20 overflow-hidden">
-             <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-indigo-600/10 blur-[120px] animate-pulse"></div>
-          </div>
-
-          <div className="text-center mb-16 relative">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Open Source Foundation.</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              Research RAG is built for the community, by researchers. Explore our full-stack architecture and contribute to the evolution of semantic literature synthesis.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* GitHub-style Background Effects */}
+          <div className="absolute inset-0 pointer-events-none">
+            {/* Primary Intense Glow - Re-engineered for maximum pop */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-7xl bg-blue-600/10 blur-[180px] rounded-full animate-pulse-slow"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-2/3 max-w-5xl bg-indigo-500/15 blur-[120px] rounded-full"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 h-1/3 max-w-3xl bg-blue-400/25 blur-[100px] rounded-full"></div>
             
+            {/* Architectural Schematic Elements (Globe-like lines) - Intensified Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1400px] h-[1400px] border border-blue-500/15 rounded-full drop-shadow-[0_0_15px_rgba(59,130,246,0.2)]"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[1100px] border border-blue-400/30 rounded-full border-dashed animate-spin-slow drop-shadow-[0_0_20px_rgba(59,130,246,0.4)]"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] border border-blue-500/20 rounded-full drop-shadow-[0_0_15px_rgba(59,130,246,0.2)] text-blue-400"></div>
+            
+
+            {/* Neural Mesh - SVG connections between nodes */}
+            <svg className="absolute inset-0 w-full h-full opacity-[0.07] transition-opacity duration-1000">
+              <defs>
+                <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="rgba(59, 130, 246, 0)" />
+                  <stop offset="50%" stopColor="rgba(59, 130, 246, 0.5)" />
+                  <stop offset="100%" stopColor="rgba(59, 130, 246, 0)" />
+                </linearGradient>
+              </defs>
+              {nodes.map((node, i) => {
+                const nextNode = nodes[(i + 1) % nodes.length];
+                return (
+                  <line 
+                    key={i}
+                    x1={`${node.left}%`} y1={`${node.top}%`} 
+                    x2={`${nextNode.left}%`} y2={`${nextNode.top}%`}
+                    stroke="url(#lineGrad)"
+                    strokeWidth="1"
+                    className="animate-pulse"
+                    style={{ animationDelay: `${i * 1.5}s` }}
+                  />
+                )
+              })}
+            </svg>
+            
+            {/* Knowledge Graph Nodes - Soft glowing data points */}
+            <div className="absolute inset-0">
+               {nodes.map((n) => (
+                 <div 
+                   key={n.id}
+                   className="absolute animate-float-drift flex items-center justify-center pointer-events-none"
+                   style={{
+                     top: `${n.top}%`,
+                     left: `${n.left}%`,
+                     animationDelay: n.delay,
+                     animationDuration: n.duration,
+                   }}
+                 >
+                   {/* Node Glow Core */}
+                   <div className="relative">
+                     <div 
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-500/20 rounded-full blur-3xl animate-pulse-slow"
+                        style={{ width: n.glowSize, height: n.glowSize }}
+                     ></div>
+                     <div 
+                        className="w-1.5 h-1.5 bg-blue-300 rounded-full shadow-[0_0_15px_rgba(147,197,253,0.8)] z-10"
+                     ></div>
+                   </div>
+                 </div>
+               ))}
+            </div>
+
+            {/* LED-style GitHub Light - Re-engineered for maximum visibility */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center select-none pointer-events-none z-0">
+               {/* Fixed Bright Colored Shadow (Radial Glow) */}
+               <div className="absolute w-[800px] h-[800px] bg-blue-600/25 blur-[150px] rounded-full animate-pulse-slow"></div>
+               {/* LED Icon */}
+               <Github size={1100} strokeWidth={0.5} className="text-blue-400 opacity-[0.3] relative z-10" />
+            </div>
+
+            {/* Bottom Horizon Glow */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[50%] bg-linear-to-t from-blue-500/15 via-transparent to-transparent blur-[120px]"></div>
+          </div>
+
+          <div className="max-w-7xl mx-auto relative z-10 px-6">
+            <div className="text-center mb-16 relative">
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Open Source Foundation.</h2>
+              <p className="text-slate-200 max-w-2xl mx-auto leading-relaxed opacity-80">
+                Research RAG is built for the community, by researchers. Explore our full-stack architecture and contribute to the evolution of semantic literature synthesis.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
             {/* Main Repo Card - Code Explorer Mockup */}
-            <div className="md:col-span-2 md:row-span-2 rounded-[2.5rem] bg-slate-900/40 border border-white/5 relative overflow-hidden group flex flex-col shadow-2xl">
-              <div className="absolute top-0 right-0 p-8 opacity-[0.12] group-hover:opacity-[0.18] transition-opacity pointer-events-none">
-                <Github className="w-80 h-80 -rotate-12 translate-x-12 translate-y-24" />
+            <div className="md:col-span-2 md:row-span-2 rounded-[2.5rem] bg-slate-900/60 border border-white/10 relative overflow-hidden group flex flex-col shadow-2xl backdrop-blur-sm">
+               {/* Previous card content remains... */}
+              <div className="absolute top-0 right-0 p-6 opacity-[0.20] group-hover:opacity-[0.30] transition-opacity pointer-events-none">
+                <Github className="w-96 h-96 -rotate-12 translate-x-8 translate-y-16 text-white" />
               </div>
 
               {/* Mock Window Header */}
@@ -354,77 +458,240 @@ export default function LandingPage() {
                </div>
             </div>
 
-             {/* Dark Card - Contribution Terminal (Join the Fleet) */}
-            <div className="rounded-4xl bg-slate-900/60 border border-white/5 hover:border-indigo-500/20 transition-all group flex flex-col relative overflow-hidden shadow-2xl">
+              {/* LIGHT Card - Contribution Terminal (Join the Fleet) */}
+            <div className="rounded-4xl bg-gray-50/80 border border-blue-400/20 shadow-[inset_0_0_40px_rgba(59,130,246,0.05)] transition-all group flex flex-col relative overflow-hidden hover:-translate-y-1 duration-500">
                {/* Mock Terminal Header */}
-               <div className="h-8 border-b border-white/5 bg-slate-950/40 flex items-center px-4 gap-2">
-                 <div className="flex gap-1.5 opacity-30">
-                   <div className="w-2 h-2 rounded-full bg-slate-400"></div>
-                   <div className="w-2 h-2 rounded-full bg-slate-400"></div>
-                   <div className="w-2 h-2 rounded-full bg-slate-400"></div>
+               <div className="h-8 border-b border-blue-200/30 bg-blue-950 flex items-center px-4 gap-2">
+                 <div className="flex gap-1.5">
+                   <div className="w-2 h-2 rounded-full bg-red-400/40"></div>
+                   <div className="w-2 h-2 rounded-full bg-amber-400/40"></div>
+                   <div className="w-2 h-2 rounded-full bg-emerald-400/40"></div>
                  </div>
-                 <div className="text-[8px] text-slate-600 font-mono flex items-center gap-1.5">
+                 <div className="text-[8px] text-blue-200 font-mono flex items-center gap-1.5">
                    <Terminal className="w-2.5 h-2.5" />
                    <span>bash — research-lab</span>
                  </div>
                </div>
 
                <div className="p-8 flex flex-col justify-between flex-1 relative">
-                 <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity pointer-events-none">
-                    <Zap className="w-32 h-32" />
+                 <div className="absolute top-0 right-0 p-4 opacity-[0.12] group-hover:opacity-[0.20] transition-opacity pointer-events-none">
+                    <Zap className="w-32 h-32 text-blue-600" />
                  </div>
                  <div className="space-y-6 relative z-10">
                    <div>
-                      <h3 className="text-xl font-bold text-white mb-2">Join the Fleet.</h3>
-                      <p className="text-xs text-slate-400 leading-relaxed">Submit PRs and test retrieval patterns.</p>
+                      <h3 className="text-xl font-bold text-slate-800 mb-2">Join the Fleet.</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed">Submit PRs and test retrieval patterns.</p>
                    </div>
                    
-                   <div className="p-4 rounded-xl bg-black/60 border border-white/10 font-mono text-[9px] text-emerald-400/90 space-y-2 shadow-inner">
+                   <div className="p-4 rounded-xl bg-slate-800 border border-slate-700 font-mono text-[9px] text-emerald-400/90 space-y-2 shadow-inner">
                       <div className="flex gap-2">
-                        <span className="text-slate-600">$</span> 
+                        <span className="text-slate-500">$</span> 
                         <span>git clone research-rag</span>
                       </div>
                       <div className="flex gap-2">
-                        <span className="text-slate-600">$</span> 
+                        <span className="text-slate-500">$</span> 
                         <span className="text-blue-400">pnpm</span> install
                       </div>
                    </div>
                  </div>
-                 <Link href="https://github.com/sazid-zero/ResearchRAG" target="_blank" className="mt-8 text-indigo-400 text-[10px] font-bold hover:text-white transition-colors flex items-center gap-2 group/link">
+                 <Link href="https://github.com/sazid-zero/ResearchRAG" target="_blank" className="mt-8 text-blue-600 text-[10px] font-bold hover:text-blue-800 transition-colors flex items-center gap-2 group/link">
                    View Repo <ChevronRight className="w-4 h-4" />
                  </Link>
                </div>
             </div>
 
-            {/* Bottom Wide Card - High Transparency Dashboard (Auditable Intelligence) */}
-            <div className="md:col-span-2 rounded-4xl p-8 bg-linear-to-r from-slate-900/60 to-slate-950/40 border border-indigo-500/10 flex flex-col justify-between relative overflow-hidden group shadow-2xl">
-               <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.05]">
-                 <div className="w-full h-1/2 bg-linear-to-b from-indigo-500/50 to-transparent animate-scanline"></div>
+            {/* Bottom Wide Card - Auditable Intelligence (Gray/Black/White) */}
+            <div className="md:col-span-2 rounded-4xl p-8 bg-linear-to-br from-gray-800 via-slate-900 to-gray-950 border border-gray-600/30 flex flex-col justify-between relative overflow-hidden group shadow-2xl hover:-translate-y-1 duration-500">
+               {/* Background Watermark */}
+               <div className="absolute -bottom-8 -right-8 opacity-[0.10] group-hover:opacity-[0.16] transition-opacity pointer-events-none">
+                 <ShieldCheck className="w-64 h-64 text-white" />
+               </div>
+               {/* Scanline */}
+               <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.04]">
+                 <div className="w-full h-1/2 bg-linear-to-b from-gray-300/50 to-transparent animate-scanline"></div>
                </div>
                
-               <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                   <div className="w-6 h-[1px] bg-indigo-500/50"></div>
-                   <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-[0.2em]">Auditable Intelligence</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3 tracking-tight">Zero-Telemetry. Zero Black Boxes.</h3>
-                <p className="text-[11px] text-slate-500 leading-relaxed">
-                  Transparency is the bedrock of academic trust. Every line of our data handling logic is auditable.
-                </p>
-              </div>
+               <div className="flex flex-col md:flex-row gap-8">
+                 {/* Left Content */}
+                 <div className="flex-1 relative z-10">
+                  <div className="flex items-center gap-3 mb-4">
+                     <div className="w-6 h-[1px] bg-gray-400"></div>
+                     <span className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Auditable Intelligence</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-3 tracking-tight">Zero-Telemetry. Zero Black Boxes.</h3>
+                  <p className="text-[11px] text-gray-400 leading-relaxed mb-6">
+                    Transparency is the bedrock of academic trust. Every line of our data handling logic is auditable.
+                  </p>
 
-              <div className="flex gap-4 relative z-10 pt-6">
-                <div className="px-4 py-3 rounded-xl bg-slate-900/80 border border-emerald-500/10 flex items-center gap-3 hover:border-emerald-500/30 transition-colors shadow-lg">
-                   <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)] animate-pulse"></div>
-                   <span className="text-[9px] font-mono text-emerald-400/80">SEC_PASSED</span>
-                </div>
-                <div className="px-4 py-3 rounded-xl bg-slate-900/80 border border-indigo-500/10 flex items-center gap-3 hover:border-indigo-500/30 transition-colors shadow-lg">
-                   <ShieldCheck className="w-4 h-4 text-indigo-400" />
-                   <span className="text-[9px] font-mono text-indigo-400/80">MIT_LICENSED</span>
-                </div>
-              </div>
+                  <div className="flex gap-4">
+                    <div className="px-4 py-3 rounded-xl bg-gray-950/80 border border-gray-600/30 flex items-center gap-3 hover:border-emerald-500/40 transition-colors shadow-sm">
+                       <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)] animate-pulse"></div>
+                       <span className="text-[9px] font-mono text-gray-300">SEC_PASSED</span>
+                    </div>
+                    <div className="px-4 py-3 rounded-xl bg-gray-950/80 border border-gray-600/30 flex items-center gap-3 hover:border-gray-400/40 transition-colors shadow-sm">
+                       <ShieldCheck className="w-4 h-4 text-gray-300" />
+                       <span className="text-[9px] font-mono text-gray-300">MIT_LICENSED</span>
+                    </div>
+                  </div>
+                 </div>
+
+                 {/* Right - Mock Audit Log */}
+                 <div className="w-full md:w-56 rounded-xl bg-black/60 border border-gray-700/40 p-4 relative z-10 overflow-hidden group/audit">
+                   {/* Flickering Scanline */}
+                   <div className="absolute inset-0 bg-linear-to-b from-transparent via-emerald-500/5 to-transparent h-20 w-full animate-scanline opacity-0 group-hover/audit:opacity-100 pointer-events-none"></div>
+                   
+                   <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-700/30">
+                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                     <span className="text-[8px] font-mono text-gray-400 uppercase tracking-wider">Live Audit Trail</span>
+                   </div>
+                   <div className="space-y-2.5 font-mono text-[8px] relative z-10">
+                     <div className="flex items-start gap-2">
+                       <span className="text-gray-600 shrink-0">23:14</span>
+                       <span className="text-emerald-400/80">✓ data_pipeline verified</span>
+                     </div>
+                     <div className="flex items-start gap-2">
+                       <span className="text-gray-600 shrink-0">23:14</span>
+                       <span className="text-emerald-400/80">✓ encryption_layer passed</span>
+                     </div>
+                     <div className="flex items-start gap-2">
+                       <span className="text-gray-600 shrink-0">23:13</span>
+                       <span className="text-gray-500">○ node: <span className="text-emerald-500/50">LOCAL_ONLY</span></span>
+                     </div>
+                     <div className="flex items-start gap-2">
+                       <span className="text-gray-600 shrink-0">23:13</span>
+                       <span className="text-gray-500">○ telemetry: <span className="text-white">NONE</span></span>
+                     </div>
+                     <div className="flex items-start gap-2">
+                       <span className="text-gray-600 shrink-0">23:12</span>
+                       <span className="text-emerald-400/80">✓ privacy: <span className="text-emerald-400">100%</span></span>
+                     </div>
+                     <div className="flex items-start gap-2 group-hover/audit:translate-x-1 transition-transform">
+                       <span className="text-gray-600 shrink-0">23:12</span>
+                       <span className="text-blue-400/80">ℹ license: MIT-AGPL</span>
+                     </div>
+                   </div>
+                   {/* Data Integrity Bar */}
+                   <div className="mt-3 pt-3 border-t border-gray-700/30 relative z-10">
+                     <div className="flex justify-between items-center mb-1.5">
+                       <span className="text-[7px] text-gray-500 uppercase tracking-wider">Data Integrity</span>
+                       <span className="text-[8px] font-mono text-emerald-400">100%</span>
+                     </div>
+                     <div className="h-1 rounded-full bg-gray-800 overflow-hidden shadow-inner">
+                       <div className="h-full w-full rounded-full bg-linear-to-r from-emerald-600 to-emerald-400 animate-pulse-slow"></div>
+                     </div>
+                     {/* Mini Sparkline Graph */}
+                     <div className="mt-2 flex items-end gap-[1px] h-3 opacity-30">
+                        {[40, 70, 50, 90, 60, 80, 100, 70, 90, 100].map((h, i) => (
+                          <div key={i} className="flex-1 bg-emerald-500 rounded-t-[1px]" style={{ height: `${h}%` }}></div>
+                        ))}
+                     </div>
+                   </div>
+                 </div>
+               </div>
             </div>
           </div>
+        </div>
+      </div>
+        {/* Tech Stack - Infinite Linear Marquee (Hugging Face Style) */}
+        <div className="w-screen relative left-1/2 -translate-x-1/2 mb-32 z-10 py-24 overflow-hidden bg-slate-950/40 border-y border-white/5">
+          <div className="max-w-8xl mx-auto text-center mb-16 px-6">
+            <span className="text-[10px] uppercase tracking-[0.5em] text-blue-500 font-bold block mb-4">The Neural Infrastructure</span>
+            <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tighter">Enterprise Foundation. Research Power.</h3>
+          </div>
+          
+          <div className="relative space-y-8">
+            {/* Top Row - Moving Left */}
+            <div className="flex gap-6 animate-marquee hover:paused w-max">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="flex gap-6">
+                  {[
+                    { name: "Next.js 16", slug: "nextdotjs", color: "bg-white", stars: "124,832", desc: "The React Framework for the Web. Optimized for speed and scalability." },
+                    { name: "Prisma ORM", slug: "prisma", color: "bg-blue-500", stars: "38,211", desc: "Next-generation Node.js and TypeScript ORM for faster development." },
+                    { name: "Tailwind 4", slug: "tailwindcss", color: "bg-cyan-400", stars: "82,544", desc: "A utility-first CSS framework for rapid and modern UI construction." },
+                    { name: "Vercel AI", slug: "vercel", color: "bg-white", stars: "12,403", desc: "Toolkit for building production-ready AI applications and interfaces." },
+                  ].map((tech, idx) => (
+                    <div 
+                      key={idx}
+                      className="w-[300px] h-[180px] rounded-3xl bg-slate-900/60 border border-white/10 p-6 flex flex-col justify-between group hover:border-blue-500/30 transition-all duration-500 relative overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.4)]"
+                    >
+                      <div className="absolute top-0 right-0 p-4 opacity-15 group-hover:opacity-25 transition-opacity pointer-events-none">
+                        <img src={`https://cdn.simpleicons.org/${tech.slug}`} className="w-24 h-24 grayscale invert" alt="" />
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                             <div className={`w-1.5 h-1.5 rounded-full ${tech.color} shadow-[0_0_10px_rgba(255,255,255,0.3)]`}></div>
+                             <span className="text-sm font-bold text-white tracking-tight">{tech.name}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-mono">
+                             <Github className="w-3 h-3" />
+                             {tech.stars}
+                          </div>
+                        </div>
+                        <p className="text-[11px] leading-relaxed text-slate-400 font-medium">{tech.desc}</p>
+                      </div>
+
+                      <div className="flex items-center gap-4">
+                         <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center group-hover:bg-blue-500/10 group-hover:border-blue-500/20 transition-all duration-500 shadow-[0_0_20px_rgba(59,130,246,0.1)] group-hover:shadow-[0_0_25px_rgba(59,130,246,0.3)]">
+                           <img src={`https://cdn.simpleicons.org/${tech.slug}`} className="w-5 h-5 drop-shadow-lg transition-transform group-hover:scale-110 invert" alt={tech.name} />
+                         </div>
+                         <div className="h-[1px] flex-1 bg-white/5 group-hover:bg-blue-500/20 transition-colors"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom Row - Moving Right */}
+            <div className="flex gap-6 animate-marquee-reverse hover:paused w-max">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="flex gap-6">
+                  {[
+                    { name: "Supabase", slug: "supabase", color: "bg-emerald-500", stars: "74,102", desc: "The open source Firebase alternative. Realtime database and auth." },
+                    { name: "Google Gemini", slug: "google", color: "bg-blue-600", stars: "Ver. 1.5", desc: "Multimodal AI models for neural synthesis and complex reasoning." },
+                    { name: "OpenAI", slug: "openai", icon: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/openai.svg", color: "bg-slate-200", stars: "Ver. 4o", desc: "Industry standard for large language model inference and training." },
+                    { name: "Cohere", slug: "cohere", icon: "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/cohere.svg", color: "bg-violet-500", stars: "Ver. 3.0", desc: "Enterprise LLMs optimized for RAG and search accuracy." },
+                  ].map((tech, idx) => (
+                    <div 
+                      key={idx}
+                      className="w-[300px] h-[180px] rounded-3xl bg-slate-900/60 border border-white/10 p-6 flex flex-col justify-between group hover:border-emerald-500/30 transition-all duration-500 relative overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.4)]"
+                    >
+                      <div className="absolute top-0 right-0 p-4 opacity-15 group-hover:opacity-25 transition-opacity pointer-events-none">
+                        <img src={(tech as any).icon || `https://cdn.simpleicons.org/${tech.slug}`} className="w-24 h-24 grayscale invert" alt="" />
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                             <div className={`w-1.5 h-1.5 rounded-full ${tech.color} shadow-[0_0_10px_rgba(255,255,255,0.3)]`}></div>
+                             <span className="text-sm font-bold text-white tracking-tight">{tech.name}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-mono">
+                             <Github className="w-3 h-3" />
+                             {tech.stars}
+                          </div>
+                        </div>
+                        <p className="text-[11px] leading-relaxed text-slate-400 font-medium">{tech.desc}</p>
+                      </div>
+
+                      <div className="flex items-center gap-4">
+                         <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center group-hover:bg-emerald-500/10 group-hover:border-emerald-500/20 transition-all duration-500 shadow-[0_0_20px_rgba(16,185,129,0.1)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.3)]">
+                           <img src={(tech as any).icon || `https://cdn.simpleicons.org/${tech.slug}`} className="w-5 h-5 drop-shadow-lg transition-transform group-hover:scale-110 invert" alt={tech.name} />
+                         </div>
+                         <div className="h-[1px] flex-1 bg-white/5 group-hover:bg-emerald-500/20 transition-colors"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Edge Fades */}
+          <div className="absolute inset-y-0 left-0 w-80 bg-linear-to-r from-slate-950 via-slate-950/80 to-transparent z-20 pointer-events-none"></div>
+          <div className="absolute inset-y-0 right-0 w-80 bg-linear-to-l from-slate-950 via-slate-950/80 to-transparent z-20 pointer-events-none"></div>
         </div>
 
         {/* CTA Section */}
@@ -449,108 +716,6 @@ export default function LandingPage() {
         </div>
 
       </main>
-
-      {/* Tech Stack - Infinite Linear Marquee (Hugging Face Style) */}
-      <section className="w-full mb-32 relative z-10 py-24 overflow-hidden bg-slate-950/40 border-y border-white/5">
-        <div className="max-w-8xl mx-auto text-center mb-16 px-6">
-          <span className="text-[10px] uppercase tracking-[0.5em] text-blue-500 font-bold block mb-4">The Neural Infrastructure</span>
-          <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tighter">Enterprise Foundation. Research Power.</h3>
-        </div>
-        
-        <div className="relative space-y-8">
-          {/* Top Row - Moving Left */}
-          <div className="flex gap-6 animate-marquee hover:paused w-max">
-            {[...Array(2)].map((_, i) => (
-              <div key={i} className="flex gap-6">
-                {[
-                  { name: "Next.js 16", slug: "nextdotjs", color: "bg-white", stars: "124,832", desc: "The React Framework for the Web. Optimized for speed and scalability." },
-                  { name: "Prisma ORM", slug: "prisma", color: "bg-blue-500", stars: "38,211", desc: "Next-generation Node.js and TypeScript ORM for faster development." },
-                  { name: "Tailwind 4", slug: "tailwindcss", color: "bg-cyan-400", stars: "82,544", desc: "A utility-first CSS framework for rapid and modern UI construction." },
-                  { name: "Vercel AI", slug: "vercel", color: "bg-white", stars: "12,403", desc: "Toolkit for building production-ready AI applications and interfaces." },
-                ].map((tech, idx) => (
-                  <div 
-                    key={idx}
-                    className="w-[300px] h-[180px] rounded-3xl bg-slate-900/60 border border-white/10 p-6 flex flex-col justify-between group hover:border-blue-500/30 transition-all duration-500 relative overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.4)]"
-                  >
-                    <div className="absolute top-0 right-0 p-4 opacity-15 group-hover:opacity-25 transition-opacity pointer-events-none">
-                      <img src={`https://cdn.simpleicons.org/${tech.slug}`} className="w-24 h-24 grayscale" alt="" />
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                           <div className={`w-1.5 h-1.5 rounded-full ${tech.color} shadow-[0_0_10px_rgba(255,255,255,0.3)]`}></div>
-                           <span className="text-sm font-bold text-white tracking-tight">{tech.name}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-mono">
-                           <Github className="w-3 h-3" />
-                           {tech.stars}
-                        </div>
-                      </div>
-                      <p className="text-[11px] leading-relaxed text-slate-400 font-medium">{tech.desc}</p>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                       <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center group-hover:bg-blue-500/10 group-hover:border-blue-500/20 transition-all duration-500 shadow-[0_0_20px_rgba(59,130,246,0.1)] group-hover:shadow-[0_0_25px_rgba(59,130,246,0.3)]">
-                         <img src={`https://cdn.simpleicons.org/${tech.slug}`} className="w-5 h-5 drop-shadow-lg transition-transform group-hover:scale-110" alt={tech.name} />
-                       </div>
-                       <div className="h-[1px] flex-1 bg-white/5 group-hover:bg-blue-500/20 transition-colors"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-
-          {/* Bottom Row - Moving Right */}
-          <div className="flex gap-6 animate-marquee-reverse hover:paused w-max">
-            {[...Array(2)].map((_, i) => (
-              <div key={i} className="flex gap-6">
-                {[
-                  { name: "Supabase", slug: "supabase", color: "bg-emerald-500", stars: "74,102", desc: "The open source Firebase alternative. Realtime database and auth." },
-                  { name: "Google Gemini", slug: "google", color: "bg-blue-600", stars: "Ver. 1.5", desc: "Multimodal AI models for neural synthesis and complex reasoning." },
-                  { name: "OpenAI", slug: "openai/white", color: "bg-slate-200", stars: "Ver. 4o", desc: "Industry standard for large language model inference and training." },
-                  { name: "Cohere", slug: "cohere/61D2B4", color: "bg-violet-500", stars: "Ver. 3.0", desc: "Enterprise LLMs optimized for RAG and search accuracy." },
-                ].map((tech, idx) => (
-                  <div 
-                    key={idx}
-                    className="w-[300px] h-[180px] rounded-3xl bg-slate-900/60 border border-white/10 p-6 flex flex-col justify-between group hover:border-emerald-500/30 transition-all duration-500 relative overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.4)]"
-                  >
-                    <div className="absolute top-0 right-0 p-4 opacity-15 group-hover:opacity-25 transition-opacity pointer-events-none">
-                      <img src={`https://cdn.simpleicons.org/${tech.slug}`} className="w-24 h-24 grayscale" alt="" />
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                           <div className={`w-1.5 h-1.5 rounded-full ${tech.color} shadow-[0_0_10px_rgba(255,255,255,0.3)]`}></div>
-                           <span className="text-sm font-bold text-white tracking-tight">{tech.name}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-mono">
-                           <Github className="w-3 h-3" />
-                           {tech.stars}
-                        </div>
-                      </div>
-                      <p className="text-[11px] leading-relaxed text-slate-400 font-medium">{tech.desc}</p>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                       <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center group-hover:bg-emerald-500/10 group-hover:border-emerald-500/20 transition-all duration-500 shadow-[0_0_20px_rgba(16,185,129,0.1)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.3)]">
-                         <img src={`https://cdn.simpleicons.org/${tech.slug}`} className="w-5 h-5 drop-shadow-lg transition-transform group-hover:scale-110" alt={tech.name} />
-                       </div>
-                       <div className="h-[1px] flex-1 bg-white/5 group-hover:bg-emerald-500/20 transition-colors"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-          
-          {/* Edge Fades */}
-          <div className="absolute inset-y-0 left-0 w-80 bg-linear-to-r from-slate-950 via-slate-950 to-transparent z-20 pointer-events-none"></div>
-          <div className="absolute inset-y-0 right-0 w-80 bg-linear-to-l from-slate-950 via-slate-950 to-transparent z-20 pointer-events-none"></div>
-        </div>
-      </section>
 
       <footer className="container mx-auto px-6 border-t border-white/5 pt-20 relative z-10 mb-10">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
