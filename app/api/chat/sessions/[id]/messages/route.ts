@@ -2,6 +2,7 @@ import { generateTextWaterfall, streamTextWaterfall, getEmbeddingModel } from '@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { embed } from 'ai';
+import { headers } from 'next/headers';
 
 export const maxDuration = 60;
 
@@ -11,6 +12,7 @@ export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await headers();
   try {
     const { id } = await params;
     const messages = await prisma.message.findMany({

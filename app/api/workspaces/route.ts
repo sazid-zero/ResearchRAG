@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { headers } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  await headers();
   try {
     const workspaces = await prisma.workspace.findMany({
       orderBy: { createdAt: 'desc' },
