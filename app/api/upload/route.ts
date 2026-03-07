@@ -80,9 +80,9 @@ export async function POST(req: Request) {
       chunksProcessed += batchChunks.length;
     }
 
-    // Trigger insight generation and metadata extraction asynchronously
-    generateAutomatedInsights(paper.id, text);
-    extractPaperMetadata(paper.id, text);
+    // Trigger insight generation and metadata extraction
+    await generateAutomatedInsights(paper.id, text);
+    await extractPaperMetadata(paper.id, text);
 
     return NextResponse.json({
       success: true,
