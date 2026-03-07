@@ -107,13 +107,13 @@ export default function LandingPage() {
             </div>
             <div>
               <h1 className="text-lg font-bold text-white leading-tight">Research RAG</h1>
-              <p className="text-[10px] text-slate-400">Advanced AI Document Analysis</p>
+              <p className="hidden sm:block text-[10px] text-slate-400">Advanced AI Document Analysis</p>
             </div>
           </div>
           <div className="flex items-center gap-4 text-sm font-medium">
             <Link href="https://github.com/sazid-zero/ResearchRAG" target="_blank" className="text-slate-400 hover:text-white transition-colors flex items-center gap-2">
               <Github className="w-4 h-4" />
-              GitHub
+              <span className="hidden sm:inline">GitHub</span>
             </Link>
             <Link 
               href="/workspace" 
@@ -134,12 +134,12 @@ export default function LandingPage() {
             <span>Neural Retrieval Architecture v4.2</span>
           </div>
           
-          <h1 className="text-4xl lg:text-6xl font-bold tracking-tight text-white leading-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
             Precision Intelligence for <br className="hidden sm:block"/>
             <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 via-indigo-300 to-violet-400">Academic Synthesis.</span>
           </h1>
           
-          <p className="text-base lg:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
+          <p className="text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
             Research RAG orchestrates high-dimensional vector search with HyDE-augmented retrieval to deliver verifiable insights across massive literature collections.
           </p>
           
@@ -208,7 +208,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6">
             
             {/* Bento Box 1: Large Span */}
-            <RevealCard direction="right" delay={0} className="md:col-span-2 p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group">
+            <RevealCard direction="right" delay={0} className="md:col-span-2 p-6 sm:p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group">
               <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center mb-6 border border-blue-500/20">
                 <Brain className="w-6 h-6 text-blue-400" />
@@ -220,7 +220,7 @@ export default function LandingPage() {
             </RevealCard>
 
             {/* Bento Box 2 */}
-            <RevealCard direction="left" delay={0.1} className="p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group flex flex-col justify-between">
+            <RevealCard direction="left" delay={0.1} className="p-6 sm:p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group flex flex-col justify-between">
               <div className="absolute inset-0 bg-linear-to-br from-violet-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-violet-500/20 flex items-center justify-center mb-4 border border-violet-500/20">
@@ -234,7 +234,7 @@ export default function LandingPage() {
             </RevealCard>
 
             {/* Bento Box 3 */}
-            <RevealCard direction="right" delay={0.2} className="p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group flex flex-col justify-between">
+            <RevealCard direction="right" delay={0.2} className="p-6 sm:p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group flex flex-col justify-between">
               <div className="absolute inset-0 bg-linear-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center mb-4 border border-emerald-500/20">
@@ -248,7 +248,7 @@ export default function LandingPage() {
             </RevealCard>
 
             {/* Bento Box 4: Large Span */}
-            <RevealCard direction="left" delay={0.3} className="md:col-span-2 p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group">
+            <RevealCard direction="left" delay={0.3} className="md:col-span-2 p-6 sm:p-8 rounded-3xl bg-white/2 border border-white/5 hover:bg-white/4 transition-colors relative overflow-hidden group">
               <div className="absolute right-0 top-0 w-64 h-full bg-linear-to-l from-slate-900/80 to-transparent z-10"></div>
               <div className="absolute inset-0 bg-linear-to-tr from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="flex flex-col md:flex-row gap-8 relative z-20">
@@ -419,7 +419,7 @@ export default function LandingPage() {
 
                    {/* Call to Action Overlay */}
                    <div className="absolute inset-0 flex items-end justify-start bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent">
-                      <div className="text-left p-12 pb-16">
+                      <div className="text-left p-6 pb-8 sm:p-12 sm:pb-16">
                          <h4 className="text-xl font-bold text-white mb-2">Core Engine Architecture.</h4>
                          <p className="text-xs text-slate-400 mb-6 max-w-xs">Deep retrieval, multi-model routing, and local-first UI primitives.</p>
                          <Link 
@@ -437,7 +437,7 @@ export default function LandingPage() {
             </RevealCard>
 
             {/* WHITE LIGHT CARD - Discussion Mockup (ConsultBook Inspired) */}
-            <RevealCard direction="left" delay={0.2} className="md:row-span-2 rounded-4xl p-8 bg-white border border-slate-200 transition-all group relative overflow-hidden flex flex-col shadow-2xl hover:-translate-y-2 duration-500">
+            <RevealCard direction="left" delay={0.2} className="md:row-span-2 rounded-4xl p-6 sm:p-8 bg-white border border-slate-200 transition-all group relative overflow-hidden flex flex-col shadow-2xl hover:-translate-y-2 duration-500">
                <div className="absolute -top-4 -right-4 w-24 h-24 bg-indigo-50 rounded-full blur-2xl group-hover:bg-indigo-100 transition-colors"></div>
                <div className="absolute top-4 right-4 animate-float">
                   <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-200">
@@ -513,7 +513,7 @@ export default function LandingPage() {
                  </div>
                </div>
 
-               <div className="p-8 flex flex-col justify-between flex-1 relative z-10">
+               <div className="p-6 sm:p-8 flex flex-col justify-between flex-1 relative z-10">
                  <div className="absolute top-0 right-0 p-4 opacity-[0.05] group-hover:opacity-[0.10] transition-opacity pointer-events-none">
                     <Terminal className="w-32 h-32 text-cyan-400" />
                  </div>
@@ -541,7 +541,7 @@ export default function LandingPage() {
             </RevealCard>
 
             {/* Bottom Wide Card - Auditable Intelligence (Gray/Black/White) */}
-            <RevealCard direction="up" delay={0.4} className="md:col-span-2 rounded-4xl p-8 bg-linear-to-br from-gray-800 via-slate-900 to-gray-950 border border-gray-600/30 flex flex-col justify-between relative overflow-hidden group shadow-2xl hover:-translate-y-2 duration-500">
+            <RevealCard direction="up" delay={0.4} className="md:col-span-2 rounded-4xl p-6 sm:p-8 bg-linear-to-br from-gray-800 via-slate-900 to-gray-950 border border-gray-600/30 flex flex-col justify-between relative overflow-hidden group shadow-2xl hover:-translate-y-2 duration-500">
                {/* Background Watermark */}
                <div className="absolute -bottom-8 -right-8 opacity-[0.10] group-hover:opacity-[0.16] transition-opacity pointer-events-none">
                  <ShieldCheck className="w-64 h-64 text-white" />
@@ -737,7 +737,7 @@ export default function LandingPage() {
         </RevealCard>
 
         {/* CTA Section */}
-        <RevealCard direction="scale" delay={0.2} className="max-w-4xl mx-auto rounded-[2.5rem] p-10 md:p-16 text-center relative overflow-hidden border border-blue-500/20 bg-blue-950/20 backdrop-blur-md mb-20 group">
+        <RevealCard direction="scale" delay={0.2} className="max-w-4xl mx-auto rounded-[2.5rem] p-8 sm:p-10 md:p-16 text-center relative overflow-hidden border border-blue-500/20 bg-blue-950/20 backdrop-blur-md mb-20 group">
           <div className="absolute inset-0 bg-linear-to-b from-blue-500/10 to-transparent opacity-50"></div>
           <div className="absolute -top-32 -right-32 w-80 h-80 bg-blue-600/20 rounded-full blur-[100px] group-hover:bg-blue-600/30 transition-colors duration-1000"></div>
           <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-violet-600/20 rounded-full blur-[100px] group-hover:bg-violet-600/30 transition-colors duration-1000"></div>
