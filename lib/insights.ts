@@ -3,6 +3,7 @@ import { prisma } from './prisma';
 
 export async function generateAutomatedInsights(paperId: string, fullText: string) {
   try {
+    console.log(`Starting automated insights for paper: ${paperId}, text length: ${fullText.length}`);
     // We only need a snippet for summary to save tokens/time
     const textSnippet = fullText.substring(0, 15000);
     
@@ -18,10 +19,14 @@ Paper Text:
 ${textSnippet}`,
     });
 
-    await prisma.paper.update({
+    console.log(`Summary generated for ${paperId}: ${summary.substring(0, 50)}...`);
+
+    const update = await prisma.paper.update({
       where: { id: paperId },
       data: { summary }
     });
+
+    console.log(`Successfully updated database for paper: ${paperId}. Result summary length: ${update.summary?.length}`);
 
     console.log(`Successfully generated insights for paper: ${paperId}`);
   } catch (error) {

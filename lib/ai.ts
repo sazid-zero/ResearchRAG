@@ -18,37 +18,38 @@ export async function generateTextWaterfall(options: {
   const modelEntries = getReasoningModels();
   let lastError = null;
 
-  for (let i = 0; i < modelEntries.length; i++) {
-    const { model, name } = modelEntries[i];
-    try {
-      console.log(`Waterfall: Attempting [${name}]...`);
-      const result = await generateText({
-        model,
-        system: options.system,
-        prompt: options.prompt,
-      });
-      
-      const text = result.text?.trim();
-      
-      // Ensure we actually got some text back
-      if (!text || text.length === 0) {
-        console.warn(`Waterfall: [${name}] returned empty text, skipping...`);
-        throw new Error("Model returned empty text");
+    console.log(`Generating waterfall text for prompt: ${options.prompt.substring(0, 100)}...`);
+    for (let i = 0; i < modelEntries.length; i++) {
+      const { model, name } = modelEntries[i];
+      try {
+        console.log(`Waterfall: Attempting [${name}] (Attempt ${i+1}/${modelEntries.length})...`);
+        const result = await generateText({
+          model,
+          system: options.system,
+          prompt: options.prompt,
+          abortSignal: AbortSignal.timeout(30000), // 30 second timeout per model
+        });
+        
+        const text = result.text?.trim();
+        
+        // Ensure we actually got some text back
+        if (!text || text.length === 0) {
+          console.warn(`Waterfall: [${name}] returned empty text, skipping...`);
+          throw new Error("Model returned empty text");
+        }
+  
+        console.log(`Waterfall: [${name}] succeeded with ${text.length} characters.`);
+        return { 
+          text,
+          modelId: name,
+          usage: result.usage,
+          finishReason: result.finishReason
+        };
+      } catch (err: any) {
+        console.error(`Waterfall: [${name}] failed:`, err);
+        lastError = err;
       }
-
-      console.log(`Waterfall: [${name}] succeeded.`);
-      return { 
-        text,
-        modelId: name,
-        // Include other fields if needed for citations or usage
-        usage: result.usage,
-        finishReason: result.finishReason
-      };
-    } catch (err: any) {
-      console.error(`Waterfall: [${name}] failed: ${err.message}`);
-      lastError = err;
     }
-  }
 
   throw lastError || new Error("All models in waterfall failed.");
 }
@@ -106,6 +107,13 @@ export const OPENROUTER_FALLBACKS = [
 export function getReasoningModels() {
   const models: Array<{ model: LanguageModel, name: string }> = [];
   
+  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    models.push({
+      model: google('gemini-1.5-flash'),
+      name: 'Gemini 1.5 Flash'
+    });
+  }
+
   if (process.env.OPENROUTER_API_KEY) {
     const openrouter = createOpenAI({
       baseURL: 'https://openrouter.ai/api/v1',
@@ -120,13 +128,6 @@ export function getReasoningModels() {
       model: openrouter(m.id),
       name: m.name
     })));
-  }
-  
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    models.push({
-      model: google('gemini-1.5-flash'),
-      name: 'Gemini 1.5 Flash'
-    });
   }
   
   // Note: fallback requires OPENAI_API_KEY
