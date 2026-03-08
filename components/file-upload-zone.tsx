@@ -106,7 +106,7 @@ export default function FileUploadZone({ workspaceId, onUploadSuccess }) {
 
   return (
     <Card
-      className={`border-2 border-dashed transition-all p-12 text-center cursor-pointer ${
+      className={`border-2 border-dashed transition-all p-6 sm:p-12 text-center cursor-pointer ${
         isDragging ? "border-blue-500 bg-blue-500/5" : "border-slate-700 bg-slate-800/30 hover:border-slate-600"
       }`}
       onDragOver={handleDragOver}
@@ -129,9 +129,9 @@ export default function FileUploadZone({ workspaceId, onUploadSuccess }) {
             {uploading ? "Processing papers..." : "Drag & drop your papers here"}
           </h3>
           {uploading && uploadStage ? (
-            <div className="mt-2 mb-4">
-              <p className="text-sm text-blue-400 font-medium mb-2">{uploadStage}</p>
-              <div className="w-64 mx-auto h-1.5 bg-slate-800 rounded-full overflow-hidden">
+            <div className="mt-2 mb-4 w-full max-w-xs mx-auto">
+              <p className="text-xs sm:text-sm text-blue-400 font-medium mb-2">{uploadStage}</p>
+              <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${uploadProgress}%` }}

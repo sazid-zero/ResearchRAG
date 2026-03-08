@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Upload, Search, BookOpen, AlertCircle, Plus, Folder, Trash2, MessageSquare } from "lucide-react"
+import { Upload, Search, BookOpen, AlertCircle, Plus, Folder, Trash2, MessageSquare, Menu, X } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import FileUploadZone from "@/components/file-upload-zone"
 import PapersList from "@/components/papers-list"
@@ -30,6 +30,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("upload")
   const [newWorkspaceName, setNewWorkspaceName] = useState("")
   const [isNewWorkspaceDialogOpen, setIsNewWorkspaceDialogOpen] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   useEffect(() => {
     fetchWorkspaces()
@@ -154,13 +155,34 @@ export default function Home() {
               <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
               <span className="text-[10px] font-medium text-slate-300 uppercase tracking-wider">Cloud Processing Alpha</span>
             </div>
+            
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="lg:hidden text-slate-400 hover:text-white"
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            >
+              {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </Button>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 flex overflow-hidden min-h-0 p-6 gap-8">
+      <main className="flex-1 flex overflow-hidden min-h-0 p-4 lg:p-6 lg:gap-8 relative">
+        {/* Mobile Sidebar Overlay */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-30 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar: Workspaces */}
-        <aside className="w-72 flex flex-col gap-6 shrink-0 h-full min-h-0">
+        <aside className={`
+          fixed inset-y-16 left-0 z-40 w-72 bg-slate-950/95 backdrop-blur-xl border-r border-slate-800 p-6 flex flex-col gap-6 shrink-0 h-[calc(100%-4rem)] transition-transform duration-300
+          lg:static lg:bg-transparent lg:backdrop-blur-none lg:border-none lg:p-0 lg:h-full lg:translate-x-0
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        `}>
           <div className="flex items-center justify-between px-2 shrink-0">
             <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Workspaces</h2>
             <Dialog open={isNewWorkspaceDialogOpen} onOpenChange={setIsNewWorkspaceDialogOpen}>
@@ -210,7 +232,7 @@ export default function Home() {
                   <span className="text-[10px] bg-slate-950/50 px-1.5 py-0.5 rounded text-slate-500 font-mono">{ws._count?.papers || 0}</span>
                   {ws.name !== "Default" && (
                     <Trash2 
-                      className="w-3.5 h-3.5 text-slate-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity" 
+                      className="w-3.5 h-3.5 text-slate-600 hover:text-red-400 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity" 
                       onClick={(e) => handleDeleteWorkspace(ws.id, e)}
                     />
                   )}
@@ -248,8 +270,8 @@ export default function Home() {
             )}
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col min-h-0">
-              <div className="flex items-center justify-between mb-6 shrink-0">
-                <TabsList className="bg-slate-950/50 border border-slate-800 p-1 rounded-xl">
+              <div className="flex items-center justify-between mb-4 lg:mb-6 shrink-0 overflow-x-auto no-scrollbar">
+                <TabsList className="bg-slate-950/50 border border-slate-800 p-1 rounded-xl flex w-fit">
                   <TabsTrigger value="upload" className="text-xs data-[state=active]:bg-slate-800 data-[state=active]:text-blue-400 rounded-lg px-4 py-2">
                     <Upload className="w-3.5 h-3.5 mr-2" />
                     Upload
@@ -262,8 +284,8 @@ export default function Home() {
                     <Search className="w-3.5 h-3.5 mr-2" />
                     Explorer
                   </TabsTrigger>
-                  <TabsTrigger value="chat" className="text-xs data-[state=active]:bg-slate-800 data-[state=active]:text-blue-400 rounded-lg px-4 py-2">
-                    <MessageSquare className="w-3.5 h-3.5 mr-2" />
+                  <TabsTrigger value="chat" className="text-[10px] sm:text-xs data-[state=active]:bg-slate-800 data-[state=active]:text-blue-400 rounded-lg px-3 sm:px-4 py-2 shrink-0">
+                    <MessageSquare className="w-3.5 h-3.5 mr-1.5 sm:mr-2" />
                     Chat
                   </TabsTrigger>
                 </TabsList>

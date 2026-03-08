@@ -86,10 +86,10 @@ export default function PapersList({ papers, onPapersChange }) {
         >
           <div className="flex items-start justify-between gap-6">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
                 <div className="flex items-center gap-2 min-w-0">
                   <FileText className="w-4 h-4 text-blue-500 shrink-0" />
-                  <h3 className="font-bold text-slate-100 truncate text-lg tracking-tight hover:text-blue-400 cursor-pointer" onClick={() => handleViewPdf(paper.metadata.url)}>
+                  <h3 className="font-bold text-slate-100 truncate text-base sm:text-lg tracking-tight hover:text-blue-400 cursor-pointer" onClick={() => handleViewPdf(paper.metadata.url)}>
                     {paper.metadata.title}
                   </h3>
                 </div>
@@ -97,7 +97,7 @@ export default function PapersList({ papers, onPapersChange }) {
                   variant="outline"
                   size="sm"
                   onClick={() => handleViewPdf(paper.metadata.url)}
-                  className="h-8 px-3 border-slate-700 bg-slate-950/50 hover:bg-slate-800 text-slate-300 hover:text-blue-400 flex items-center gap-1.5 text-xs font-medium"
+                  className="h-8 px-3 w-fit border-slate-700 bg-slate-950/50 hover:bg-slate-800 text-slate-300 hover:text-blue-400 flex items-center gap-1.5 text-[10px] sm:text-xs font-medium"
                 >
                   <ExternalLink className="w-3 h-3" />
                   <span>View PDF</span>
