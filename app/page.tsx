@@ -751,7 +751,7 @@ export default function LandingPage() {
               href="/workspace" 
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-[0_0_40px_rgba(37,99,235,0.4)] hover:shadow-[0_0_60px_rgba(37,99,235,0.6)] hover:-translate-y-1"
             >
-              Start Researching Now
+              Start Researching
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
