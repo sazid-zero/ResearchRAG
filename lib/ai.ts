@@ -1,6 +1,6 @@
-import { google } from '@ai-sdk/google';
-import { createOpenAI, openai } from '@ai-sdk/openai';
-import { cohere } from '@ai-sdk/cohere';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createOpenAI } from '@ai-sdk/openai';
+import { createCohere } from '@ai-sdk/cohere';
 import { generateText, streamText, LanguageModel } from 'ai';
 
 /**
@@ -28,6 +28,7 @@ export async function generateTextWaterfall(options: {
           system: options.system,
           prompt: options.prompt,
           abortSignal: AbortSignal.timeout(30000), // 30 second timeout per model
+          maxRetries: 3, // Add retries for rate limits
         });
         
         const text = result.text?.trim();
@@ -107,30 +108,66 @@ export const OPENROUTER_FALLBACKS = [
 export function getReasoningModels() {
   const models: Array<{ model: LanguageModel, name: string }> = [];
   
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+  if (process.env.COHERE_API_KEY) {
+    const cohere = createCohere({
+      apiKey: process.env.COHERE_API_KEY
+    });
+    // This model was specifically verified to work in this environment (STATUS 200)
     models.push({
-      model: google('gemini-1.5-flash'),
-      name: 'Gemini 1.5 Flash'
+      model: cohere('command-r7b-12-2024'),
+      name: 'Cohere Command R7B'
+    });
+    models.push({
+      model: cohere('command-r-plus'),
+      name: 'Cohere Command R+'
     });
   }
 
-  if (process.env.OPENROUTER_API_KEY) {
-    const openrouter = createOpenAI({
-      baseURL: 'https://openrouter.ai/api/v1',
-      apiKey: process.env.OPENROUTER_API_KEY,
-      headers: {
-        'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-        'X-Title': 'Research Paper RAG',
-      }
+  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    const google = createGoogleGenerativeAI({
+      apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY
     });
-    
+    // gemini-2.0-flash was recognized but hit rate limits
+    models.push({
+      model: google('gemini-2.0-flash'),
+      name: 'Gemini 2.0 Flash'
+    });
+    models.push({
+      model: google('gemini-1.5-pro'),
+      name: 'Gemini 1.5 Pro'
+    });
+  }
+
+  if (process.env.COHERE_API_KEY) {
+    const cohere = createCohere({
+      apiKey: process.env.COHERE_API_KEY
+    });
+    models.push({
+      model: cohere('command-r-plus'),
+      name: 'Cohere Command R+'
+    });
+  }
+
+  const openrouter = createOpenAI({
+    baseURL: 'https://openrouter.ai/api/v1',
+    apiKey: process.env.OPENROUTER_API_KEY || '',
+    headers: {
+      'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+      'X-Title': 'Research Paper RAG',
+    }
+  });
+
+  if (process.env.OPENROUTER_API_KEY) {
     models.push(...OPENROUTER_FALLBACKS.map(m => ({
       model: openrouter(m.id),
       name: m.name
     })));
   }
   
-  // Note: fallback requires OPENAI_API_KEY
+  const openai = createOpenAI({
+    apiKey: process.env.OPENAI_API_KEY || ''
+  });
+  
   const fallbackModel = openai('gpt-4o-mini');
   return models.length > 0 ? models : [{ model: fallbackModel, name: 'GPT-4o Mini' }];
 }
@@ -145,12 +182,21 @@ export function getInsightModel() {
 
 export function getEmbeddingModel(type: 'search_query' | 'search_document' = 'search_query') {
   if (process.env.COHERE_API_KEY) {
+    const cohere = createCohere({
+      apiKey: process.env.COHERE_API_KEY
+    });
     // Cohere v3 embeddings have 1024 dimensions
     return cohere.embedding('embed-english-v3.0');
   }
   if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    const google = createGoogleGenerativeAI({
+      apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY
+    });
     return google.textEmbeddingModel('gemini-embedding-001');
   }
+  const openai = createOpenAI({
+    apiKey: process.env.OPENAI_API_KEY || ''
+  });
   return openai.embedding('text-embedding-3-small');
 }
 

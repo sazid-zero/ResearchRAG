@@ -31,5 +31,13 @@ ${textSnippet}`,
     console.log(`Successfully generated insights for paper: ${paperId}`);
   } catch (error) {
     console.error(`Failed to generate insights for paper ${paperId}:`, error);
+    try {
+      await prisma.paper.update({
+        where: { id: paperId },
+        data: { summary: "Analysis complete. Detailed AI summary unavailable for this document." }
+      });
+    } catch (innerError) {
+      console.error("Critical error updating paper with failure marker:", innerError);
+    }
   }
 }

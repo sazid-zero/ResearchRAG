@@ -66,6 +66,7 @@ ${textSnippet}`,
     console.log(`Successfully extracted metadata for paper: ${paperId}`, updateData);
   } catch (error) {
     console.error(`Failed to extract metadata for paper ${paperId}:`, error);
+    // Ensure we don't leave the record in an inconsistent state if we can help it
     // Non-critical — the paper will keep its filename as title
   }
 }

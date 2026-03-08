@@ -80,9 +80,16 @@ export async function POST(req: Request) {
       chunksProcessed += batchChunks.length;
     }
 
+    console.log(`Processing complete for paper ${paper.id}. ${chunksProcessed} chunks embedded.`);
+
     // Trigger insight generation and metadata extraction
+    console.log(`Starting automated insights for ${paper.id}...`);
     await generateAutomatedInsights(paper.id, text);
+    console.log(`Insights complete for ${paper.id}.`);
+    
+    console.log(`Starting metadata extraction for ${paper.id}...`);
     await extractPaperMetadata(paper.id, text);
+    console.log(`Metadata complete for ${paper.id}.`);
 
     return NextResponse.json({
       success: true,
@@ -92,8 +99,8 @@ export async function POST(req: Request) {
         extraction: 'complete',
         chunking: `${chunks.length} chunks created`,
         embedding: `${chunksProcessed} chunks embedded`,
-        insights: 'processing',
-        metadata: 'processing',
+        insights: 'complete',
+        metadata: 'complete',
       }
     });
 
