@@ -1,115 +1,261 @@
-# Research Paper RAG Assistant: Advanced AI Analyst 🚀🔬📖🎓
+# Research Paper RAG Assistant
 
-## 📝 Detailed Description
-The **Research Paper RAG Assistant** is a high-performance Retrieval-Augmented Generation (RAG) platform, specifically engineered to navigate the immense density and technical complexity of academic and scientific literature. It serves as an intelligent bridge between the user and high-level scientific documentation, enabling researchers to extract methodologies, compare findings, and understand complex formulas with unprecedented precision.
+An AI-powered tool that helps you actually *read* and *understand* your research papers — instead of letting them collect dust in a folder somewhere.
 
-A core pillar of this system is **Privacy and Data Integrity**. Unlike many cloud-based tools, this assistant prioritizes the security of your research. Documents are stored **locally and offline** within your infrastructure, ensuring that sensitive data never leaves your environment. Combined with a resilient, multi-model AI reasoning pipeline, it creates a secure, precise, and highly manageable research workstation.
+Upload your PDFs, ask questions in plain language, and get precise answers with citations pointing back to the exact source paragraphs. It's like having a research partner who's read everything and never forgets a detail.
 
----
-
-## ✨ Features Breakdown
-
-### 🔬 Core Synthesis & Retrieval
-*   **HyDE-Powered Semantic Search:** Utilizes Hypothetical Document Embeddings to transform user questions into technical "hypothetical" research snippets, ensuring the search vector perfectly aligns with the academic style of the source papers.
-*   **Multi-Paper Comparative Analysis:** A specialized mode that detects when multiple documents are selected and instructs the AI to synthesize findings, identify areas of consensus, and highlight scientific divergences.
-*   **Automated Research Insights:** Instant generation of TL;DRs, key methodologies, and primary findings upon document upload, providing an immediate overview of new additions.
-
-### 🛡️ Security & Integrity
-*   **Local Offline Storage:** Full control over your data. PDF files and their extracted content are stored locally in the `/uploads` directory and indexed in your local/private database instance.
-*   **Privacy-First Architecture:** No research papers are uploaded to third-party cloud storage (S3/GCP/Azure). Your intellectual property remains on your server.
-*   **Workspace-Level Isolation:** Organically group and manage papers into "Workspaces" or "Collections," allowing for clean separation between different research topics or projects.
-
-### 🧮 Scientific & UI Engineering
-*   **Academic LaTeX Rendering:** Full support for mathematical equations, ensuring that formulas (like Hubble's Law or neural network loss functions) are displayed with professional journal-grade precision.
-*   **Interactive Source Citations:** Every claim made by the AI includes a direct link to the source. Clicking a citation highlights and displays the exact paragraph from the original PDF for immediate verification.
-*   **Dynamic Model Metadata:** Real-time reporting of the specific AI model used for the response, along with processing latency, following industry standards for transparency.
+> **Privacy first:** Your papers stay on your machine. Only vector embeddings ever leave the server — the actual text and PDFs never get uploaded to third-party storage.
 
 ---
 
-## 🛠️ Feature Implementation: A Technical Deep Dive
+## What It Does
 
-### 1. Document Security & Local Integrity
-The system implements a **Local-First persistence layer**. When a PDF is uploaded, it is assigned a unique UUID and stored in a private directory. Only the *semantic embeddings* (vectors) are sent to the embedding provider, while the actual document text and binary data remain local. This ensures that even if external AI APIs are used for synthesis, the primary source of truth is always under your control.
-
-### 2. The Resilient Reasoning Waterfall
-Instead of a single-endpoint approach, the system orchestrates a **Cascade Logic**. When a query is initiated, the system attempts to reach the primary reasoning engine (**DeepSeek V3**). If the provider returns a rate limit (429) or a generic error, the logic immediately transitions to the next prioritized model (**Llama 3.3 70B** or **Gemma 3 27B**), and finally to a "deep reasoning" model (**DeepSeek R1**) if synthesis requires high-density thinking.
-
-### 3. Universal Math Normalization Layer
-Scientific papers use inconsistent formatting for LaTeX symbols. We implemented a custom **Regex Normalization Middleware** in the frontend. This layer scans the AI's output for varied delimiters (e.g., `\( ... \)` or `\[ ... \]`) and standardizes them into valid KaTeX format before rendering, ensuring equations are visually perfect.
+- **Ask questions across papers** — "How does Paper A's methodology compare to Paper B?" works out of the box. The system detects multi-paper queries and synthesizes across sources automatically.
+- **HyDE-powered search** — Instead of naive keyword matching, your question gets transformed into a hypothetical academic answer first, then *that* gets matched against your papers. This dramatically improves retrieval quality for technical queries.
+- **Auto-generated summaries** — Every paper gets a TL;DR and extracted metadata (title, authors, year) on upload, so you can skim your collection at a glance.
+- **LaTeX rendering** — Equations render properly. Hubble's Law, loss functions, integrals — they all look right, not like broken markup.
+- **Source citations** — Every claim links back to the original chunk. Click it, read the source, verify the answer.
+- **Resilient AI** — If one model is rate-limited or down, the system automatically falls through to the next one. You don't notice; it just works.
 
 ---
 
-## 🔄 Workflow Logic
+## System Architecture
 
-### A. Document Ingestion Flow
-1.  **Upload:** User drags a PDF into the workspace.
-2.  **Local Storage:** File is saved to the local `/uploads` folder.
-3.  **Extraction:** High-fidelity text extraction via server-side logic.
-4.  **Chunking:** Text is broken into semantic chunks with 20% overlap to preserve context.
-5.  **Vectorization:** Chunks are vectorized using **Cohere v3** (optimizing for academic/technical text).
-6.  **Persistence:** Vectors and metadata are stored in **Supabase (pgvector)** via Prisma.
+Here's how the pieces fit together at a high level:
 
-### B. Query & Synthesis Flow
-1.  **Query Input:** User asks a question (e.g., "What is the redshift formula?").
-2.  **HyDE Transformation:** The AI generates a hypothetical response at a high technical level.
-3.  **Local Context Search:** The system embeds the hypothetical answer and performs a similarity search against your **local** paper indices.
-4.  **Context Assembly:** Top-K relevant chunks are retrieved.
-5.  **Waterfall Synthesis:** The reasoning engine (DeepSeek/Llama) synthesizes the final answer using the provided context.
-6.  **Rendering:** The response is displayed with citations and LaTeX equations.
+```mermaid
+graph TB
+    subgraph Frontend["Next.js Frontend (React 19)"]
+        Upload[File Upload Zone]
+        Query[Query Interface]
+        Chat[Chat Panel]
+        Papers[Papers List]
+    end
+
+    subgraph API["API Routes"]
+        UploadAPI["/api/upload"]
+        QueryAPI["/api/query"]
+        ChatAPI["/api/chat/sessions"]
+        PapersAPI["/api/papers"]
+        WorkspacesAPI["/api/workspaces"]
+    end
+
+    subgraph Processing["Processing Pipeline"]
+        PDF[PDF Text Extraction]
+        Chunk[Semantic Chunking<br/>~2000 chars, 20% overlap]
+        Embed[Cohere v3 Embeddings<br/>1024-dim vectors]
+        Insights[Auto Summary + Metadata]
+    end
+
+    subgraph RAG["RAG Query Pipeline"]
+        HyDE[HyDE Transform<br/>Question → Hypothetical Answer]
+        VecSearch[pgvector Cosine Similarity<br/>Top-20 retrieval]
+        Rerank[Cohere Rerank v3<br/>Top-20 → Top-5]
+        Context[Context Assembly<br/>+ Citation mapping]
+    end
+
+    subgraph Models["AI Model Waterfall"]
+        M1[Cohere Command R7B/R+]
+        M2[Gemini 2.0 Flash / 1.5 Pro]
+        M3[DeepSeek V3 / Llama 3.3 70B]
+        M4[OpenAI GPT-4o Mini — fallback]
+    end
+
+    subgraph Storage["Data Layer"]
+        DB[(PostgreSQL + pgvector<br/>via Supabase)]
+        Files[("/uploads" local directory)]
+    end
+
+    Upload --> UploadAPI
+    Query --> QueryAPI
+    Chat --> ChatAPI
+    Papers --> PapersAPI
+
+    UploadAPI --> PDF --> Chunk --> Embed --> DB
+    UploadAPI --> Files
+    PDF --> Insights --> DB
+
+    QueryAPI --> HyDE --> Embed
+    Embed --> VecSearch --> Rerank --> Context
+    VecSearch --> DB
+    Context --> M1
+    M1 -.->|"rate limited / error"| M2
+    M2 -.->|"rate limited / error"| M3
+    M3 -.->|"rate limited / error"| M4
+
+    ChatAPI --> RAG
+
+    style Frontend fill:#e8f4fd,stroke:#2196F3
+    style Storage fill:#fff3e0,stroke:#FF9800
+    style Models fill:#f3e5f5,stroke:#9C27B0
+    style RAG fill:#e8f5e9,stroke:#4CAF50
+    style Processing fill:#fce4ec,stroke:#E91E63
+```
 
 ---
 
-## 🔌 API Documentation
+## Workflow: Upload → Query → Answer
 
-| Endpoint | Method | Description |
+### Document Ingestion
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant API as /api/upload
+    participant PDF as pdf-parse
+    participant Chunker as Chunking Engine
+    participant Cohere as Cohere v3
+    participant DB as PostgreSQL + pgvector
+    participant LLM as AI Models
+
+    User->>API: Upload PDF
+    API->>PDF: Extract text
+    API-->>API: Save file to /uploads
+    PDF->>Chunker: Raw text
+    Chunker->>Cohere: Chunks (~2000 chars each)
+    Cohere->>DB: Store 1024-dim embeddings
+    API->>LLM: Generate summary + extract metadata
+    LLM->>DB: Store paper record with insights
+    DB-->>User: Paper ready for querying
+```
+
+### Query & Synthesis
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant API as /api/query
+    participant LLM as HyDE Model
+    participant Cohere as Cohere v3
+    participant DB as pgvector Search
+    participant Reranker as Cohere Rerank
+    participant Waterfall as Model Waterfall
+
+    User->>API: "What is the redshift formula?"
+    API->>LLM: Generate hypothetical academic answer
+    LLM->>Cohere: Embed hypothetical answer
+    Cohere->>DB: Cosine similarity search (top-20)
+    DB->>Reranker: Re-score candidates
+    Reranker->>API: Top-5 relevant chunks + citations
+    API->>Waterfall: Assemble context + prompt
+    Waterfall-->>User: Streamed answer with citations & LaTeX
+```
+
+---
+
+## Under the Hood
+
+### How Your Data Stays Private
+
+When you upload a PDF, the file itself gets stored locally in `/uploads`. The text is extracted and chunked on *your* server. Only the numeric vector embeddings (not the text) are sent to Cohere for encoding. When you query, the LLM receives curated context snippets — never the full paper.
+
+### The Model Waterfall
+
+Nobody likes staring at a spinner because an API is rate-limited. The system tries models in priority order — if one fails (429, timeout, error), it immediately tries the next:
+
+1. **Cohere Command R7B / R+** (primary)
+2. **Gemini 2.0 Flash / 1.5 Pro** (secondary)
+3. **DeepSeek V3 / Llama 3.3 70B / Qwen 2.5 72B** (tertiary)
+4. **OpenAI GPT-4o Mini** (last-resort fallback)
+
+Switching between models is invisible to you. The response just arrives.
+
+### Math Normalization
+
+Scientific papers (and LLMs) use inconsistent LaTeX delimiters — `\( ... \)`, `\[ ... \]`, `$...$`, `$$...$$` all mixed together. A regex normalization layer on the frontend standardizes everything into valid KaTeX before rendering, so equations always display correctly.
+
+---
+
+## API Endpoints
+
+| Endpoint | Method | What it does |
 | :--- | :--- | :--- |
-| `/api/query` | `POST` | Orchestrates the HyDE search, vector retrieval, and AI waterfall synthesis. |
-| `/api/papers` | `GET` | Fetches all indexed papers for the current workspace. |
-| `/api/papers?workspaceId=ID` | `GET` | Filtered list of papers for specific research collections. |
-| `/api/upload` | `POST` | Handles PDF ingestion, local storage, chunking, and indexing. |
+| `/api/upload` | `POST` | Ingests a PDF — extracts text, chunks, embeds, stores, and generates insights |
+| `/api/query` | `POST` | Runs the full RAG pipeline: HyDE → vector search → rerank → synthesize |
+| `/api/papers` | `GET` | Lists papers (optionally filtered by `?workspaceId=ID`) |
+| `/api/workspaces` | `GET/POST` | Manage research workspaces/collections |
+| `/api/chat/sessions` | `GET/POST` | Create and list conversation sessions |
+| `/api/chat/sessions/:id/messages` | `GET/POST` | Multi-turn chat with conversation history |
 
 ---
 
-## 💻 Tech Stack
+## Tech Stack
 
-*   **Framework:** Next.js 16 (App Router + React 19)
-*   **AI SDK:** Vercel UI SDK (Unified model interface)
-*   **Primary AI Engine:** OpenRouter (Cascading models: DeepSeek, Llama, Gemma, Gemini, R1)
-*   **Embeddings:** Cohere v3 (Technical/Scientific specialized)
-*   **Database:** Supabase (PostgreSQL with `pgvector` for local RAG)
-*   **ORM:** Prisma (Type-safe vector and metadata management)
-*   **Math:** KaTeX / Remark-Math / Rehype-Katex
-*   **Styling:** Tailwind CSS v4
+| Layer | Tech |
+| :--- | :--- |
+| **Framework** | Next.js 16 (App Router + React 19) |
+| **AI SDK** | Vercel AI SDK |
+| **LLM Providers** | OpenRouter, Google Generative AI, Cohere, OpenAI (waterfall) |
+| **Embeddings** | Cohere embed-english-v3.0 (1024-dim) |
+| **Reranking** | Cohere rerank-english-v3.0 |
+| **Database** | PostgreSQL + pgvector (via Supabase) |
+| **ORM** | Prisma |
+| **Math** | KaTeX + remark-math + rehype-katex |
+| **Styling** | Tailwind CSS v4 |
 
 ---
 
-## 🚀 Quick Start
+## Database Schema
 
-### 1. Installation
+```
+Workspace
+  ├── papers: Paper[]
+  └── chats: ChatSession[]
+
+Paper
+  ├── title, authors, year, summary, url
+  └── chunks: DocumentChunk[]
+
+DocumentChunk
+  ├── content, section, page
+  └── embedding: vector(1024)
+
+ChatSession
+  └── messages: Message[]
+
+Message
+  ├── role, content
+  └── citations (JSON)
+```
+
+All relationships cascade on delete — removing a workspace cleans up everything underneath it.
+
+---
+
+## Quick Start
+
+### 1. Install
+
 ```bash
 git clone <repository-url>
 pnpm install
 npx prisma db push
 ```
 
-### 2. Environment Variables
+### 2. Configure
+
 Create a `.env` file:
+
 ```bash
 OPENROUTER_API_KEY="sk-or-v1-..."
-COHERE_API_KEY="..." # For technical embeddings
-DATABASE_URL="postgresql://..." # Connect to your local/private DB
+COHERE_API_KEY="..."
+DATABASE_URL="postgresql://..."
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
-### 3. Run Development
+### 3. Run
+
 ```bash
 pnpm dev
 ```
 
----
-
-## ⚠️ Performance Note
-This project utilizes **Free Tier APIs** (OpenRouter Free Models & Cohere Trial). While the architecture is production-ready and supports heavy scaling, users may experience a slight processing latency (5-10 seconds) during high-load periods due to free-market rate limits. Switching to paid tiers requires **zero code changes** and reduces latency to <2 seconds.
+That's it. Open [localhost:3000](http://localhost:3000), upload a paper, and start asking questions.
 
 ---
-**Designed for Scientific Discovery. Built for Privacy and Technical Excellence.** 🚀🛡️🔬📖🎓
+
+## A Note on Performance
+
+This project runs on **free-tier APIs** (OpenRouter free models, Cohere trial key). The architecture handles production load just fine, but free tiers come with rate limits — expect 5–10 second response times during busy periods. To speed things up, you have two options — both require zero code changes:
+
+- **Paid API keys** — swap your `.env` keys for paid tiers (OpenRouter, Cohere, etc.) and latency drops to under 2 seconds.
+- **Local LLMs** — point the model endpoints at a local inference server (e.g., Ollama, vLLM, or LM Studio). Since the system uses OpenAI-compatible APIs, any local model that exposes the same interface works out of the box. Full privacy, no API costs, no rate limits.
